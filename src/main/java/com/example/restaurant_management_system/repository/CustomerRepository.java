@@ -1,37 +1,39 @@
 package com.example.restaurant_management_system.repository;
 
-
 import com.example.restaurant_management_system.model.Customer;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class CustomerRepository implements Repository<Customer> {
+@Repository
+public class CustomerRepository implements AbstractRepository<Customer> {
 
-    private List<Customer> customers = new ArrayList<>();
+    private final List<Customer> customers = new ArrayList<>(Arrays.asList(
+            new Customer(1, "Alice", new ArrayList<>()),
+            new Customer(2, "Bob", new ArrayList<>()),
+            new Customer(3, "Charlie", new ArrayList<>())
+    ));
 
     @Override
-    public void add(Customer customer) {
-        customers.add(customer);
+    public void save(Customer entity) {
+        customers.add(entity);
     }
 
     @Override
-    public void update(Customer customer) {
-        for (int i = 0; i < customers.size(); i++) {
-            if (customers.get(i).getId() == customer.getId()) {
-                customers.set(i, customer);
-                return;
-            }
-        }
+    public void delete(Integer id) {
+        customers.removeIf(c -> c.getId() == id);
     }
 
     @Override
-    public void delete(Customer customer) {
-        customers.removeIf(c -> c.getId() == customer.getId());
+    public void update(Customer entity) {
+        delete(entity.getId());
+        save(entity);
     }
 
     @Override
-    public Customer findById(int id) {
+    public Customer findById(Integer id) {
         return customers.stream()
                 .filter(c -> c.getId() == id)
                 .findFirst()
@@ -40,6 +42,6 @@ public class CustomerRepository implements Repository<Customer> {
 
     @Override
     public List<Customer> findAll() {
-        return new ArrayList<>(customers);
+        return customers;
     }
 }
