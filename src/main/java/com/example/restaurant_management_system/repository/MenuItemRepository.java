@@ -22,7 +22,7 @@ public class MenuItemRepository implements AbstractRepository<MenuItem> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         items.removeIf(i -> i.getId().equals("M" + id));
     }
 
@@ -33,7 +33,7 @@ public class MenuItemRepository implements AbstractRepository<MenuItem> {
     }
 
     @Override
-    public MenuItem findById(Integer id) {
+    public MenuItem findById(String id) {
         return items.stream()
                 .filter(i -> i.getId().equals("M" + id))
                 .findFirst()

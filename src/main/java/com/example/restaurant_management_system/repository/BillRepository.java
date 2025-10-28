@@ -1,25 +1,26 @@
 package com.example.restaurant_management_system.repository;
 
 import com.example.restaurant_management_system.model.Bill;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@Repository
 public class BillRepository implements AbstractRepository <Bill> {
+
     private final List<Bill> bills = new ArrayList<>(Arrays.asList(
             new Bill("B1", "O1", 120.50),
             new Bill("B2", "O2", 89.99),
             new Bill("B3", "O3", 45.00)
     ));
-
     @Override
     public void save(Bill entity) {
         bills.add(entity);
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         bills.removeIf(b -> b.getId().equals("B" + id));
     }
 
@@ -30,7 +31,7 @@ public class BillRepository implements AbstractRepository <Bill> {
     }
 
     @Override
-    public Bill findById(Integer id) {
+    public Bill findById(String id) {
         return bills.stream()
                 .filter(b -> b.getId().equals("B" + id))
                 .findFirst()

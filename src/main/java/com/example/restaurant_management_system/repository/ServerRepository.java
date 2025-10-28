@@ -22,7 +22,7 @@ public class ServerRepository implements AbstractRepository<Server> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         servers.removeIf(s -> s.getId().equals("S" + id));
     }
 
@@ -33,7 +33,7 @@ public class ServerRepository implements AbstractRepository<Server> {
     }
 
     @Override
-    public Server findById(Integer id) {
+    public Server findById(String id) {
         return servers.stream()
                 .filter(s -> s.getId().equals("S" + id))
                 .findFirst()

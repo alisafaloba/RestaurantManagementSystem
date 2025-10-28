@@ -24,7 +24,7 @@ public class StaffRepository implements AbstractRepository<Staff> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         staff.removeIf(s -> s.getId().equals("S" + id) || s.getId().equals("C" + id));
     }
 
@@ -35,7 +35,7 @@ public class StaffRepository implements AbstractRepository<Staff> {
     }
 
     @Override
-    public Staff findById(Integer id) {
+    public Staff findById(String id) {
         return staff.stream()
                 .filter(s -> s.getId().endsWith(String.valueOf(id)))
                 .findFirst()

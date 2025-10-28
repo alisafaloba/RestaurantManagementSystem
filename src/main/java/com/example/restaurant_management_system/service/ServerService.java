@@ -19,7 +19,7 @@ public class ServerService {
         return serverRepository.findAll();
     }
 
-    public Server getServerById(int id) {
+    public Server getServerById(String id) {
         return serverRepository.findById(id);
     }
 
@@ -31,7 +31,7 @@ public class ServerService {
         serverRepository.update(server);
     }
 
-    public void deleteServer(int id) {
+    public void deleteServer(String id) {
         serverRepository.delete(id);
     }
 }

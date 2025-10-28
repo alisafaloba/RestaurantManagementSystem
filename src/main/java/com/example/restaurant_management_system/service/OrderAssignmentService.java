@@ -19,7 +19,7 @@ public class OrderAssignmentService {
         return assignmentRepository.findAll();
     }
 
-    public OrderAssignment getAssignmentById(int id) {
+    public OrderAssignment getAssignmentById(String id) {
         return assignmentRepository.findById(id);
     }
 
@@ -31,7 +31,7 @@ public class OrderAssignmentService {
         assignmentRepository.update(assignment);
     }
 
-    public void deleteAssignment(int id) {
+    public void deleteAssignment(String id) {
         assignmentRepository.delete(id);
     }
 

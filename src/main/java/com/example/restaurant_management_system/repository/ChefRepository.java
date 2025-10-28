@@ -22,7 +22,7 @@ public class ChefRepository implements AbstractRepository<Chef> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         chefs.removeIf(c -> c.getId().equals("C" + id));
     }
 
@@ -33,7 +33,7 @@ public class ChefRepository implements AbstractRepository<Chef> {
     }
 
     @Override
-    public Chef findById(Integer id) {
+    public Chef findById(String id) {
         return chefs.stream()
                 .filter(c -> c.getId().equals("C" + id))
                 .findFirst()

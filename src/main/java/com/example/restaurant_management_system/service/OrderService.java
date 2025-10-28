@@ -19,7 +19,7 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public Order getOrderById(int id) {
+    public Order getOrderById(String id) {
         return orderRepository.findById(id);
     }
 
@@ -33,7 +33,7 @@ public class OrderService {
         orderRepository.update(order);
     }
 
-    public void deleteOrder(int id) {
+    public void deleteOrder(String id) {
         orderRepository.delete(id);
     }
 

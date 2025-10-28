@@ -19,7 +19,7 @@ public class ChefService {
         return chefRepository.findAll();
     }
 
-    public Chef getChefById(int id) {
+    public Chef getChefById(String id) {
         return chefRepository.findById(id);
     }
 
@@ -31,7 +31,7 @@ public class ChefService {
         chefRepository.update(chef);
     }
 
-    public void deleteChef(int id) {
+    public void deleteChef(String id) {
         chefRepository.delete(id);
     }
 }

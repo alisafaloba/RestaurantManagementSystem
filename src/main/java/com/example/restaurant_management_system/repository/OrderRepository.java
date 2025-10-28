@@ -22,7 +22,7 @@ public class OrderRepository implements AbstractRepository<Order> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         orders.removeIf(o -> o.getId().equals("O" + id));
     }
 
@@ -33,7 +33,7 @@ public class OrderRepository implements AbstractRepository<Order> {
     }
 
     @Override
-    public Order findById(Integer id) {
+    public Order findById(String id) {
         return orders.stream()
                 .filter(o -> o.getId().equals("O" + id))
                 .findFirst()

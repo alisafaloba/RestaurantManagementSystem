@@ -19,7 +19,7 @@ public class MenuItemService {
         return menuItemRepository.findAll();
     }
 
-    public MenuItem getMenuItemById(int id) {
+    public MenuItem getMenuItemById(String id) {
         return menuItemRepository.findById(id);
     }
 
@@ -31,7 +31,7 @@ public class MenuItemService {
         menuItemRepository.update(item);
     }
 
-    public void deleteMenuItem(int id) {
+    public void deleteMenuItem(String id) {
         menuItemRepository.delete(id);
     }
 }

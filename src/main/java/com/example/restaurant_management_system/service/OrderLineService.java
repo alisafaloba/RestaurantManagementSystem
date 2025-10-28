@@ -19,7 +19,7 @@ public class OrderLineService {
         return orderLineRepository.findAll();
     }
 
-    public OrderLine getOrderLineById(int id) {
+    public OrderLine getOrderLineById(String id) {
         return orderLineRepository.findById(id);
     }
 
@@ -31,7 +31,7 @@ public class OrderLineService {
         orderLineRepository.update(line);
     }
 
-    public void deleteOrderLine(int id) {
+    public void deleteOrderLine(String id) {
         orderLineRepository.delete(id);
     }
 }
