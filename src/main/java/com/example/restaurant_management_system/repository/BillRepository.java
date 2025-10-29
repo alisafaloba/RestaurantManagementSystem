@@ -33,7 +33,7 @@ public class BillRepository implements AbstractRepository <Bill> {
     @Override
     public Bill findById(String id) {
         return bills.stream()
-                .filter(b -> b.getId().equals("B" + id))
+                .filter(b -> b.getId().equals( id))
                 .findFirst()
                 .orElse(null);
     }
