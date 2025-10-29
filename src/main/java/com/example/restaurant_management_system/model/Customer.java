@@ -8,13 +8,23 @@ public class Customer {
     private String id;
     private String name;
     private List<Order> orders;
+    private String emailaddress;
 
     public Customer() {}
 
-    public Customer(String id, String name, List<Order> orders) {
+    public Customer(String id, String name, List<Order> orders,String emailaddress) {
         this.id = id;
         this.name = name;
         this.orders = orders;
+        this.emailaddress = emailaddress;
+    }
+
+    public String getEmailaddress() {
+        return emailaddress;
+    }
+
+    public void setEmailaddress(String emailaddress) {
+        this.emailaddress = emailaddress;
     }
 
     public String getId() { return id; }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class TableController {
@@ -41,10 +42,12 @@ public class TableController {
         Table fetched = tableService.getTableByNumber("T2");
         sb.append("<br>Fetched table with ID T2: ").append(fetched).append("<br>");
 
-        // Show all free tables
-        sb.append("<br>Free tables:<br>");
-        tableService.getFreeTables().forEach(t -> sb.append(t).append("<br>"));
+        // Show all free tables (filter done HERE)
+//        List<Table> freeTables = allTables.stream()
+//                .filter(t -> "Free".equalsIgnoreCase(t.getStatus()))
+//                .collect(Collectors.toList());
 
+//
         // Delete one table
         tableService.deleteTable("T3");
         sb.append("<br>After deleting table with ID T3:<br>");
