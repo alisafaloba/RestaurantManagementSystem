@@ -35,10 +35,4 @@ public class OrderAssignmentService {
         assignmentRepository.delete(id);
     }
 
-    // găsește assignment-urile pentru o comandă
-    public List<OrderAssignment> findAssignmentsForOrder(String orderId) {
-        return assignmentRepository.findAll().stream()
-                .filter(a -> a.getOrderId().equals(orderId))
-                .toList();
-    }
 }
