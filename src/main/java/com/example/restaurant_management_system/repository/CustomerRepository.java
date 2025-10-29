@@ -11,9 +11,9 @@ import java.util.List;
 public class CustomerRepository implements AbstractRepository<Customer> {
 
     private final List<Customer> customers = new ArrayList<>(Arrays.asList(
-            new Customer(1, "Alice", new ArrayList<>()),
-            new Customer(2, "Bob", new ArrayList<>()),
-            new Customer(3, "Charlie", new ArrayList<>())
+            new Customer("1", "Alice", new ArrayList<>()),
+            new Customer("2", "Bob", new ArrayList<>()),
+            new Customer("3", "Charlie", new ArrayList<>())
     ));
 
     @Override
@@ -21,10 +21,13 @@ public class CustomerRepository implements AbstractRepository<Customer> {
         customers.add(entity);
     }
 
+
+
     @Override
-    public void delete(Integer id) {
-        customers.removeIf(c -> c.getId() == id);
+    public void delete(String id) {
+        customers.removeIf(c -> c.getId().equals(id));
     }
+
 
     @Override
     public void update(Customer entity) {
@@ -33,12 +36,16 @@ public class CustomerRepository implements AbstractRepository<Customer> {
     }
 
     @Override
-    public Customer findById(Integer id) {
-        return customers.stream()
-                .filter(c -> c.getId() == id)
-                .findFirst()
-                .orElse(null);
+    public Customer findById(String id) {
+        customers.stream()
+                .filter(c -> {
+                    c.getId();
+                    return false;
+                })
+                .findFirst();
+        return null;
     }
+
 
     @Override
     public List<Customer> findAll() {

@@ -19,7 +19,7 @@ public class StaffService {
         return staffRepository.findAll();
     }
 
-    public Staff getStaffById(int id) {
+    public Staff getStaffById(String id) {
         return staffRepository.findById(id);
     }
 
@@ -31,7 +31,7 @@ public class StaffService {
         staffRepository.update(s);
     }
 
-    public void deleteStaff(int id) {
+    public void deleteStaff(String id) {
         staffRepository.delete(id);
     }
 }

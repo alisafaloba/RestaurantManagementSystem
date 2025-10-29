@@ -22,9 +22,10 @@ public class OrderLineRepository implements AbstractRepository<OrderLine> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         lines.removeIf(l -> l.getId().equals("L" + id));
     }
+
 
     @Override
     public void update(OrderLine entity) {
@@ -33,7 +34,7 @@ public class OrderLineRepository implements AbstractRepository<OrderLine> {
     }
 
     @Override
-    public OrderLine findById(Integer id) {
+    public OrderLine findById(String id) {
         return lines.stream()
                 .filter(l -> l.getId().equals("L" + id))
                 .findFirst()

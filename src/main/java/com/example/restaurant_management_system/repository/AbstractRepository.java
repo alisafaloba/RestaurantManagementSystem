@@ -4,8 +4,11 @@ import java.util.List;
 
 public interface AbstractRepository <T>{
     void  save(T entity);
-    void delete(Integer id);
+
+
+    void delete(String id);
+
     void update(T entity);
-    T findById(Integer id);
+    T findById(String id);
     List<T> findAll();
 }

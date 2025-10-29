@@ -30,7 +30,7 @@ public class BillService {
         return billRepository.findAll();
     }
 
-    public Bill getBillById(int id) {
+    public Bill getBillById(String id) {
         return billRepository.findById(id);
     }
 
@@ -42,7 +42,7 @@ public class BillService {
         billRepository.update(bill);
     }
 
-    public void deleteBill(int id) {
+    public void deleteBill(String id) {
         billRepository.delete(id);
     }
 
@@ -51,7 +51,7 @@ public class BillService {
      * calculează totalul parcurgând orderLines și găsind prețul din menuItemRepository.
      * Returnează factura creată sau null dacă comanda nu există.
      */
-    public Bill generateBillForOrder(int orderNumber) {
+    public Bill generateBillForOrder(String orderNumber) {
         Order order = orderRepository.findById(orderNumber);
         if (order == null) return null;
 

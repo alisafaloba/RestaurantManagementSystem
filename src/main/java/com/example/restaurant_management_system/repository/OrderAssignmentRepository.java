@@ -22,7 +22,7 @@ public class OrderAssignmentRepository implements AbstractRepository<OrderAssign
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String id) {
         assignments.removeIf(a -> a.getId().equals("A" + id));
     }
 
@@ -33,7 +33,7 @@ public class OrderAssignmentRepository implements AbstractRepository<OrderAssign
     }
 
     @Override
-    public OrderAssignment findById(Integer id) {
+    public OrderAssignment findById(String id) {
         return assignments.stream()
                 .filter(a -> a.getId().equals("A" + id))
                 .findFirst()

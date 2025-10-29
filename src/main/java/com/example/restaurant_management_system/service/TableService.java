@@ -18,7 +18,7 @@ public class TableService {
         return tableRepository.findAll();
     }
 
-    public Table getTableByNumber(int number) {
+    public Table getTableByNumber(String number) {
         return tableRepository.findById(number);
     }
 
@@ -30,7 +30,7 @@ public class TableService {
         tableRepository.update(table);
     }
 
-    public void deleteTable(int number) {
+    public void deleteTable(String number) {
         tableRepository.delete(number);
     }
 

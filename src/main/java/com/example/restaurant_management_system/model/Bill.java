@@ -3,13 +3,13 @@ package com.example.restaurant_management_system.model;
 
 
 public class Bill {
-    private String id;
-    private String orderId;
+    protected String id;
+    protected String orderId;
     private double totalAmount;
 
     public Bill() {}
 
-    public Bill(String id, String orderId, double totalAmount) {
+    public Bill(String id,  String orderId, double totalAmount) {
         this.id = id;
         this.orderId = orderId;
         this.totalAmount = totalAmount;

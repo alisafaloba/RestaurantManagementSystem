@@ -26,12 +26,13 @@ public class TableRepository implements AbstractRepository<Table> {
     }
 
     @Override
-    public Table findById(Integer number) {
+    public Table findById(String id) {
         return tables.stream()
-                .filter(t -> t.getNumber() == number)
+                .filter(t -> t.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
+
 
     @Override
     public void save(Table table) {
@@ -39,8 +40,9 @@ public class TableRepository implements AbstractRepository<Table> {
     }
 
     @Override
-    public void delete(Integer number) {
-        tables.removeIf(t -> t.getNumber() == number);
+    public void delete(String number) {
+        tables.removeIf(t -> t.getId().equals(number));
+
     }
 
     @Override
