@@ -2,7 +2,7 @@ package com.example.restaurant_management_system.repository;
 
 import java.util.List;
 
-public interface AbstractRepository <T>{
+public interface CrudRepository<T>{
     void  save(T entity);
 
 

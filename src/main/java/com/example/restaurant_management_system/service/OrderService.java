@@ -37,9 +37,4 @@ public class OrderService {
         orderRepository.delete(id);
     }
 
-    public List<Order> getOpenOrders() {
-        return orderRepository.findAll().stream()
-                .filter(o -> "Open".equalsIgnoreCase(o.getStatus()))
-                .toList();
-    }
 }

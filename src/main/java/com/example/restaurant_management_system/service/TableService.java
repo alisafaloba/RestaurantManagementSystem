@@ -34,9 +34,4 @@ public class TableService {
         tableRepository.delete(number);
     }
 
-    public List<Table> getFreeTables() {
-        return tableRepository.findAll().stream()
-                .filter(t -> t.getOccupiedStatus().equalsIgnoreCase("Free"))
-                .toList();
-    }
 }

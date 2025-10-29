@@ -24,7 +24,7 @@ public class BillController {
     }
 
     // GET a bill by ID
-    @GetMapping("/get/{id}")  // <--- explicitly add /get/{id} to avoid conflicts
+    @GetMapping("/get/{id}")
     public ResponseEntity<Bill> getBillById(@PathVariable String id) {
         Bill bill = billService.getBillById(id);
         if (bill == null) {
@@ -43,7 +43,7 @@ public class BillController {
     // PUT update a bill
     @PutMapping("/{id}")
     public ResponseEntity<Bill> updateBill(@PathVariable String id, @RequestBody Bill bill) {
-        bill.setId(id);
+        bill.setId(id); // asigurăm că ID-ul din path și body sunt aceleași
         billService.updateBill(bill);
         return ResponseEntity.ok(bill);
     }
@@ -53,15 +53,5 @@ public class BillController {
     public ResponseEntity<Void> deleteBill(@PathVariable String id) {
         billService.deleteBill(id);
         return ResponseEntity.noContent().build();
-    }
-
-    // POST generate a bill for an order
-    @PostMapping("/generate/{orderId}")
-    public ResponseEntity<Bill> generateBill(@PathVariable String orderId) {
-        Bill bill = billService.generateBillForOrder(orderId);
-        if (bill == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(bill);
     }
 }
