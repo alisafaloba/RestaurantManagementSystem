@@ -28,9 +28,9 @@ public class TableController {
 //        Table t3 = new Table("T3", 3, "Free", new ArrayList<>());
 
         // Add tables
-        tableService.addTable(t1);
-        tableService.addTable(t2);
-        tableService.addTable(t3);
+//        tableService.addTable(t1);
+//        tableService.addTable(t2);
+//        tableService.addTable(t3);
 
         // Fetch all tables
         List<Table> allTables = tableService.getAllTables();
