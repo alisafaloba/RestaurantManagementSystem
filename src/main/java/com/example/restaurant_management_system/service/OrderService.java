@@ -23,15 +23,15 @@ public class OrderService {
         return orderRepository.findById(id);
     }
 
-    public void createOrder(Order order) {
-        order.setStatus("Open");
-        orderRepository.save(order);
-    }
-
-    public void closeOrder(Order order) {
-        order.setStatus("Closed");
-        orderRepository.update(order);
-    }
+//    public void createOrder(Order order) {
+//        order.setStatus("Open");
+//        orderRepository.save(order);
+//    }
+//
+//    public void closeOrder(Order order) {
+//        order.setStatus("Closed");
+//        orderRepository.update(order);
+//    }
 
     public void deleteOrder(String id) {
         orderRepository.delete(id);

@@ -8,14 +8,14 @@ public class Order {
     private String id;
     private String customerId;
     private String tableId;
-    private String status; // "Open" or "Closed"
+    private OrderStatus status; // "Open" or "Closed"
     private List<OrderLine> orderLines;
     private List<OrderAssignment> assignments;
     private Date date;
 
     public Order() {}
 
-    public Order(String id, String customerId, String tableId, String status,
+    public Order(String id, String customerId, String tableId, OrderStatus status,
                  List<OrderLine> orderLines, List<OrderAssignment> assignments, Date date) {
         this.id = id;
         this.customerId = customerId;
@@ -43,8 +43,8 @@ public class Order {
     public String getTableId() { return tableId; }
     public void setTableId(String tableId) { this.tableId = tableId; }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public OrderStatus getStatus() { return status; }
+    public void setStatus(OrderStatus status) { this.status = status; }
 
     public List<OrderLine> getOrderLines() { return orderLines; }
     public void setOrderLines(List<OrderLine> orderLines) { this.orderLines = orderLines; }

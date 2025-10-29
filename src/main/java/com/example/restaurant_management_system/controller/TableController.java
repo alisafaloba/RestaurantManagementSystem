@@ -23,9 +23,9 @@ public class TableController {
     @ResponseBody
     public String testTables() {
         // Create some sample tables (orders = empty for now)
-        Table t1 = new Table("T1", 1, "Free", new ArrayList<>());
-        Table t2 = new Table("T2", 2, "Occupied", new ArrayList<>());
-        Table t3 = new Table("T3", 3, "Free", new ArrayList<>());
+//        Table t1 = new Table("T1", 1, "Free", new ArrayList<>());
+//        Table t2 = new Table("T2", 2, "Occupied", new ArrayList<>());
+//        Table t3 = new Table("T3", 3, "Free", new ArrayList<>());
 
         // Add tables
         tableService.addTable(t1);
