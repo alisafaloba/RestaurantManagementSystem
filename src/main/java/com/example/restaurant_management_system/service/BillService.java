@@ -30,9 +30,9 @@ public class BillService {
         billRepository.save(bill);
     }
 
-    public void updateBill(Bill bill) {
-        billRepository.update(bill);
-    }
+    //public void updateBill(Bill bill) {
+      //  billRepository.update(bill);
+    //}
 
     public void deleteBill(String id) {
         billRepository.delete(id);

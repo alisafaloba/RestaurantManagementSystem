@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chef List</title>
+    <style>
+        table { border-collapse: collapse; width: 60%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        button { background-color: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        button:hover { background-color: #c9302c; }
+        a { text-decoration: none; color: #007bff; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<h1>Chef List</h1>
+
+<a th:href="@{/chef/new}">Add New Chef</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Specialty</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="chef : ${chefs}">
+        <td th:text="${chef.id}"></td>
+        <td th:text="${chef.name}"></td>
+        <td th:text="${chef.specialization}"></td>
+        <td>
+            <form th:action="@{'/chef/' + ${chef.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

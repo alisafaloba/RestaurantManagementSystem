@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order List</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th { background-color: #f2f2f2; }
+        button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #c9302c; }
+    </style>
+</head>
+<body>
+<h1>Orders</h1>
+
+<a th:href="@{/order/new}">Add New Order</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Customer ID</th>
+        <th>Table ID</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.customerId}"></td>
+        <td th:text="${order.tableId}"></td>
+        <td th:text="${order.status}"></td>
+        <td th:text="${#dates.format(order.date, 'yyyy-MM-dd HH:mm')}"></td>
+        <td>
+            <form th:action="@{'/order/' + ${order.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

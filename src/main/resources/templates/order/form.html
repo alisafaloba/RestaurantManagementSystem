@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        label { font-weight: bold; }
+        input, select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover { background-color: #45a049; }
+        a {
+            display: inline-block;
+            margin-top: 12px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<h1>Create New Order</h1>
+
+<form th:action="@{/order}" th:object="${order}" method="post">
+
+    <div>
+        <label for="customerId">Customer ID:</label>
+        <input type="text" id="customerId" th:field="*{customerId}" required>
+    </div>
+
+    <div>
+        <label for="tableId">Table ID:</label>
+        <input type="text" id="tableId" th:field="*{tableId}" required>
+    </div>
+
+    <div>
+        <label for="status">Status:</label>
+        <select id="status" th:field="*{status}">
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+        </select>
+    </div>
+
+    <button type="submit">Save</button>
+</form>
+
+<a th:href="@{/order}">Back to list</a>
+</body>
+</html>

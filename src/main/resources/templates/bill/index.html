@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bill List</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 60%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c9302c;
+        }
+    </style>
+</head>
+<body>
+<h1>Bill List</h1>
+
+<a th:href="@{/bill/new}">Add New Bill</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Order ID</th>
+        <th>Total Amount</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="bill : ${bills}">
+        <td th:text="${bill.id}"></td>
+        <td th:text="${bill.orderId}"></td>
+        <td th:text="${bill.totalAmount}"></td>
+        <td>
+            <form th:action="@{'/bill/' + ${bill.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

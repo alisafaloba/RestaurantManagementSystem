@@ -74,7 +74,7 @@ public class InMemoryRepository<T> implements CrudRepository<T> {
      */
     private String getIdValue(T entity) {
         try {
-            Field idField = type.getDeclaredField("id");
+            Field idField = findField(type, "id");
             idField.setAccessible(true);
             Object value = idField.get(entity);
             return value != null ? value.toString() : null;
@@ -82,4 +82,17 @@ public class InMemoryRepository<T> implements CrudRepository<T> {
             throw new RuntimeException("Entity must have a field named 'id'", e);
         }
     }
+
+    private Field findField(Class<?> clazz, String fieldName) throws NoSuchFieldException {
+        Class<?> current = clazz;
+        while (current != null) {
+            try {
+                return current.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                current = current.getSuperclass(); // search parent class
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
+    }
+
 }
