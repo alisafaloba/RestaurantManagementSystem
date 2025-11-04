@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Servers</title>
+</head>
+<body>
+<h1>Servers</h1>
+
+<a th:href="@{/server/new}">Add New Server</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Designation</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="srv : ${servers}">
+        <td th:text="${srv.id}"></td>
+        <td th:text="${srv.name}"></td>
+        <td th:text="${srv.designation}"></td>
+        <td>
+            <form th:action="@{|/server/${srv.id}/delete|}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

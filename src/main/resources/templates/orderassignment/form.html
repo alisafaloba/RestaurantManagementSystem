@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Order Assignment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        a {
+            display: inline-block;
+            margin-top: 12px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>Create New Order Assignment</h1>
+
+<form th:action="@{/orderassignment}" th:object="${assignment}" method="post">
+    <div>
+        <label for="orderId">Order ID:</label>
+        <input type="text" th:field="*{orderId}" id="orderId" required>
+    </div>
+
+    <div>
+        <label for="staffId">Staff ID:</label>
+        <input type="text" th:field="*{staffId}" id="staffId" required>
+    </div>
+
+    <button type="submit">Save</button>
+</form>
+
+<a th:href="@{/orderassignment}">Back to list</a>
+</body>
+</html>
