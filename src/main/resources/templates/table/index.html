@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Table List</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 70%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c9302c;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>Table List</h1>
+
+<a th:href="@{/table/new}">Add New Table</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Number</th>
+        <th>Status</th>
+        <th>Number of Orders</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="table : ${tables}">
+        <td th:text="${table.id}"></td>
+        <td th:text="${table.number}"></td>
+        <td th:text="${table.occupiedStatus}"></td>
+        <td th:text="${table.orders != null ? table.orders.size() : 0}"></td>
+        <td>
+            <form th:action="@{'/table/' + ${table.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
