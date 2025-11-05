@@ -1,21 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add Server</title>
+    <meta charset="UTF-8">
+    <title>Create Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        a {
+            display: inline-block;
+            margin-top: 12px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<h1>Add Server</h1>
+<h1>Create New Server</h1>
 
 <form th:action="@{/server}" th:object="${server}" method="post">
-    <label>Name:</label>
-    <input type="text" th:field="*{name}" required><br>
 
-    <label>Designation:</label>
-    <input type="text" th:field="*{designation}" required><br>
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" th:field="*{name}" id="name" required>
+    </div>
+
+    <div>
+        <label for="designation">Designation:</label>
+        <input type="text" th:field="*{designation}" id="designation" required>
+    </div>
 
     <button type="submit">Save</button>
 </form>
 
-<a th:href="@{/server}">Back</a>
+<a th:href="@{/server}">Back to list</a>
+
 </body>
 </html>

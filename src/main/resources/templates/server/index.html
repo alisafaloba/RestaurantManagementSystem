@@ -1,31 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Servers</title>
+    <meta charset="UTF-8">
+    <title>Server List</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 60%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c9302c;
+        }
+    </style>
 </head>
 <body>
-<h1>Servers</h1>
+<h1>Server List</h1>
 
 <a th:href="@{/server/new}">Add New Server</a>
 
-<table border="1">
+<table>
+    <thead>
     <tr>
         <th>ID</th>
         <th>Name</th>
         <th>Designation</th>
-        <th>Actions</th>
+        <th>Action</th>
     </tr>
-    <tr th:each="srv : ${servers}">
-        <td th:text="${srv.id}"></td>
-        <td th:text="${srv.name}"></td>
-        <td th:text="${srv.designation}"></td>
+    </thead>
+    <tbody>
+    <tr th:each="server : ${servers}">
+        <td th:text="${server.id}"></td>
+        <td th:text="${server.name}"></td>
+        <td th:text="${server.designation}"></td>
         <td>
-            <form th:action="@{|/server/${srv.id}/delete|}" method="post">
+            <form th:action="@{'/server/' + ${server.id} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
-
 </body>
 </html>
