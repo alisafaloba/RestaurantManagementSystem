@@ -1,5 +1,6 @@
 package com.example.restaurant_management_system.controller;
 
+import com.example.restaurant_management_system.model.Bill;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import com.example.restaurant_management_system.model.Customer;
@@ -41,6 +42,21 @@ public class CustomerController {
     @PostMapping("/{id}/delete")
     public String deleteCustomer(@PathVariable String id) {
         customerService.deleteCustomer(id);
-        return "redirect:/bill";
+        return "redirect:/customer";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Customer customer = customerService.getCustomerById(id);
+        model.addAttribute("customer", customer);
+        return "Customer/form";
+    }
+
+    // POST /bill/{id}/update → handle edit submission
+    @PostMapping("/{id}/update")
+    public String updateCustomer(@PathVariable String id, @ModelAttribute Customer customer) {
+        customer.setId(id);
+        customerService.updateCustomer(customer);
+        return "redirect:/customer";
     }
 }

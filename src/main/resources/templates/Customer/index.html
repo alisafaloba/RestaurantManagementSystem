@@ -4,34 +4,13 @@
     <meta charset="UTF-8">
     <title>Customer List</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 70%;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        button {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #c9302c;
-        }
-        a {
-            text-decoration: none;
-            color: #007bff;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+        table { border-collapse: collapse; width: 70%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        button { background-color: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        button:hover { background-color: #c9302c; }
+        a { text-decoration: none; color: #007bff; margin-right: 5px; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -56,7 +35,8 @@
         <td th:text="${customer.emailaddress}"></td>
         <td th:text="${customer.orders != null ? customer.orders.size() : 0}"></td>
         <td>
-            <form th:action="@{'/customer/' + ${customer.id} + '/delete'}" method="post">
+            <a th:href="@{'/customer/' + ${customer.id} + '/edit'}">Edit</a>
+            <form th:action="@{'/customer/' + ${customer.id} + '/delete'}" method="post" style="display:inline">
                 <button type="submit">Delete</button>
             </form>
         </td>
