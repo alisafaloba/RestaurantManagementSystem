@@ -4,8 +4,8 @@ import com.example.restaurant_management_system.model.MenuItem;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MenuItemRepository extends InMemoryRepository<MenuItem> {
+public class MenuItemRepository extends InFileRepository<MenuItem> {
     public MenuItemRepository() {
-        super(MenuItem.class);
+        super(MenuItem.class,"menuItems.json");
     }
 }

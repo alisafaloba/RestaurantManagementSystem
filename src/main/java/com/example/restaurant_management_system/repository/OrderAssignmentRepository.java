@@ -4,8 +4,8 @@ import com.example.restaurant_management_system.model.OrderAssignment;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderAssignmentRepository extends InMemoryRepository<OrderAssignment> {
+public class OrderAssignmentRepository extends InFileRepository<OrderAssignment> {
     public OrderAssignmentRepository() {
-        super(OrderAssignment.class);
+        super(OrderAssignment.class, "orderAssignments.json");
     }
 }

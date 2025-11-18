@@ -2,65 +2,83 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Order Assignment</title>
+    <title th:text="${assignment.id != null} ? 'Edit Order Assignment' : 'Assign New Order'">Order Assignment Form</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 40px auto;
+        .form-container {
+            max-width: 500px;
+            margin: 20px 0;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .form-group {
+            margin-bottom: 20px;
         }
         label {
+            display: block;
+            margin-bottom: 5px;
             font-weight: bold;
         }
-        input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
+        .btn {
+            padding: 10px 20px;
             border: none;
-            padding: 8px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        a {
-            display: inline-block;
-            margin-top: 12px;
             text-decoration: none;
-            color: #007bff;
+            display: inline-block;
         }
-        a:hover {
-            text-decoration: underline;
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-secondary:hover { background-color: #545b62; }
+        .form-actions { display: flex; gap: 10px; margin-top: 30px; }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
-<h1>Create New Order Assignment</h1>
+<h1 th:text="${assignment.id != null} ? 'Edit Order Assignment' : 'Assign New Order'">
+    Order Assignment Form
+</h1>
 
-<form th:action="@{/orderassignment}" th:object="${assignment}" method="post">
-    <div>
-        <label for="orderId">Order ID:</label>
-        <input type="text" th:field="*{orderId}" id="orderId" required>
-    </div>
+<!-- Error Message Display -->
+<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-    <div>
-        <label for="staffId">Staff ID:</label>
-        <input type="text" th:field="*{staffId}" id="staffId" required>
-    </div>
+<div class="form-container">
+    <form th:action="${assignment.id != null} ?
+                          @{'/orderassignment/' + ${assignment.id} + '/update'} :
+                          @{/orderassignment}"
+          method="post" th:object="${assignment}">
 
-    <button type="submit">Save</button>
-</form>
+        <div class="form-group">
+            <label for="orderId">Order ID:</label>
+            <input type="text" id="orderId" th:field="*{orderId}" required>
+        </div>
 
-<a th:href="@{/orderassignment}">Back to list</a>
+        <div class="form-group">
+            <label for="staffId">Staff ID:</label>
+            <input type="text" id="staffId" th:field="*{staffId}" required>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <span th:text="${assignment.id != null} ? 'Update' : 'Create'">Save</span>
+            </button>
+            <a th:href="@{/orderassignment}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 </body>
 </html>

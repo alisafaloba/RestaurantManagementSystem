@@ -2,10 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Chef List</title>
+    <title>Menu Items</title>
     <style>
-        table { border-collapse: collapse; width: 60%; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
+        table { border-collapse: collapse; width: 70%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
         button { background-color: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
         button:hover { background-color: #c9302c; }
@@ -14,27 +14,29 @@
     </style>
 </head>
 <body>
-<h1>Chef List</h1>
+<h1>Menu Items</h1>
 
-<a th:href="@{/chef/new}">Add New Chef</a>
+<a th:href="@{/menuitem/new}">Add New Menu Item</a>
 
 <table>
     <thead>
     <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Specialty</th>
+        <th>Price</th>
+        <th>Description</th>
         <th>Action</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="chef : ${chefs}">
-        <td th:text="${chef.id}"></td>
-        <td th:text="${chef.name}"></td>
-        <td th:text="${chef.specialization}"></td>
+    <tr th:each="menuItem : ${menuItems}">
+        <td th:text="${menuItem.id}"></td>
+        <td th:text="${menuItem.name}"></td>
+        <td th:text="${menuItem.price}"></td>
+        <td th:text="${menuItem.description}"></td>
         <td>
-            <a th:href="@{'/chef/' + ${chef.id} + '/edit'}">Edit</a>
-            <form th:action="@{'/chef/' + ${chef.id} + '/delete'}" method="post" style="display:inline;">
+            <a th:href="@{'/menuitem/' + ${menuItem.id} + '/edit'}">Edit</a>
+            <form th:action="@{'/menuitem/' + ${menuItem.id} + '/delete'}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>

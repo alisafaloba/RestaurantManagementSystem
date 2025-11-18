@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${chef.id} == null ? 'Create New Chef' : 'Edit Chef'">Chef Form</title>
+    <title th:text="${menuItem.id} == null ? 'Create New Menu Item' : 'Edit Menu Item'">Menu Item Form</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; }
         form { display: flex; flex-direction: column; gap: 12px; }
         label { font-weight: bold; }
-        input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+        input, textarea { padding: 8px; border: 1px solid #ccc; border-radius: 5px; width: 100%; }
         button { background-color: #4CAF50; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 5px; }
         button:hover { background-color: #45a049; }
         a { display: inline-block; margin-top: 12px; text-decoration: none; color: #007bff; }
@@ -15,23 +15,28 @@
     </style>
 </head>
 <body>
-<h1 th:text="${chef.id} == null ? 'Create New Chef' : 'Edit Chef'">Chef Form</h1>
+<h1 th:text="${menuItem.id} == null ? 'Create New Menu Item' : 'Edit Menu Item'">Menu Item Form</h1>
 
-<form th:action="${chef.id} == null ? @{/chef} : @{/chef/{id}/update(id=${chef.id})}"
-      th:object="${chef}" method="post">
+<form th:action="${menuItem.id} == null ? @{/menuitem} : @{/menuitem/{id}/update(id=${menuItem.id})}"
+      th:object="${menuItem}" method="post">
     <div>
         <label for="name">Name:</label>
         <input type="text" th:field="*{name}" id="name" required>
     </div>
 
     <div>
-        <label for="specialty">Specialty:</label>
-        <input type="text" th:field="*{specialization}" id="specialty" required>
+        <label for="price">Price:</label>
+        <input type="number" step="0.01" th:field="*{price}" id="price" required>
     </div>
 
-    <button type="submit" th:text="${chef.id} == null ? 'Create' : 'Update'">Submit</button>
+    <div>
+        <label for="description">Description:</label>
+        <textarea th:field="*{description}" id="description" rows="3"></textarea>
+    </div>
+
+    <button type="submit" th:text="${menuItem.id} == null ? 'Create' : 'Update'">Submit</button>
 </form>
 
-<a th:href="@{/chef}">Back to list</a>
+<a th:href="@{/menuitem}">Back to list</a>
 </body>
 </html>
