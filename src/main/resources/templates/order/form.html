@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Order</title>
+    <title th:text="${order.id} == null ? 'Create Order' : 'Edit Order'">Order Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,9 +39,10 @@
     </style>
 </head>
 <body>
-<h1>Create New Order</h1>
+<h1 th:text="${order.id} == null ? 'Create New Order' : 'Edit Order'"></h1>
 
-<form th:action="@{/order}" th:object="${order}" method="post">
+<form th:action="${order.id} == null ? @{/order} : @{'/order/' + ${order.id} + '/update'}"
+      th:object="${order}" method="post">
 
     <div>
         <label for="customerId">Customer ID:</label>
@@ -60,7 +61,7 @@
         </select>
     </div>
 
-    <button type="submit">Save</button>
+    <button type="submit" th:text="${order.id} == null ? 'Save' : 'Update'"></button>
 </form>
 
 <a th:href="@{/order}">Back to list</a>

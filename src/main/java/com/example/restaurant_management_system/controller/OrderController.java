@@ -59,4 +59,17 @@ public class OrderController {
         orderService.deleteOrder(id);
         return "redirect:/order";
     }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Order order = orderService.getOrderById(id);
+        model.addAttribute("order", order);
+        return "order/form";
+    }
+    @PostMapping("/{id}/update")
+    public String updateOrder(@PathVariable String id, @ModelAttribute Order order) {
+        order.setId(id);
+        orderService.updateOrder(order);
+        return "redirect:/order";
+    }
 }

@@ -18,7 +18,7 @@ public class TableService {
         return tableRepository.findAll();
     }
 
-    public Table getTableByNumber(String number) {
+    public Table getTableById(String number) {
         return tableRepository.findById(number);
     }
 

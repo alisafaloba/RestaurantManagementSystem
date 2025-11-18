@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Server</title>
+    <title th:text="${server.id} == null ? 'Create Server' : 'Edit Server'">Server Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,9 +45,10 @@
     </style>
 </head>
 <body>
-<h1>Create New Server</h1>
+<h1 th:text="${server.id} == null ? 'Create New Server' : 'Edit Server'"></h1>
 
-<form th:action="@{/server}" th:object="${server}" method="post">
+<form th:action="${server.id} == null ? @{/server} : @{'/server/' + ${server.id} + '/update'}"
+      th:object="${server}" method="post">
 
     <div>
         <label for="name">Name:</label>
@@ -59,10 +60,9 @@
         <input type="text" th:field="*{designation}" id="designation" required>
     </div>
 
-    <button type="submit">Save</button>
+    <button type="submit" th:text="${server.id} == null ? 'Save' : 'Update'"></button>
 </form>
 
 <a th:href="@{/server}">Back to list</a>
-
 </body>
 </html>

@@ -42,4 +42,18 @@ public class OrderLineController {
         orderLineService.deleteOrderLine(id);
         return "redirect:/orderline";
     }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        OrderLine orderLine = orderLineService.getOrderLineById(id);
+        model.addAttribute("orderline", orderLine);
+        return "orderline/form";
+    }
+
+    @PostMapping("/{id}/update")
+    public String updateOrderLine(@PathVariable String id, @ModelAttribute("orderline") OrderLine orderLine) {
+        orderLine.setId(id);
+        orderLineService.updateOrderLine(orderLine);
+        return "redirect:/orderline";
+    }
 }

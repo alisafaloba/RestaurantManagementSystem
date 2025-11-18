@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Table</title>
+    <title th:text="${table.id} == null ? 'Create Table' : 'Edit Table'">Table Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,9 +45,11 @@
     </style>
 </head>
 <body>
-<h1>Create New Table</h1>
+<h1 th:text="${table.id} == null ? 'Create New Table' : 'Edit Table'"></h1>
 
-<form th:action="@{/table}" th:object="${table}" method="post">
+<form th:action="${table.id} == null ? @{/table} : @{'/table/' + ${table.id} + '/update'}"
+      th:object="${table}" method="post">
+
     <div>
         <label for="number">Number:</label>
         <input type="number" th:field="*{number}" id="number" required>
@@ -61,7 +63,7 @@
         </select>
     </div>
 
-    <button type="submit">Save</button>
+    <button type="submit" th:text="${table.id} == null ? 'Save' : 'Update'"></button>
 </form>
 
 <a th:href="@{/table}">Back to list</a>

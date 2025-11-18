@@ -42,4 +42,18 @@ public class ServerController {
         serverService.deleteServer(id);
         return "redirect:/server";
     }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Server server = serverService.getServerById(id);
+        model.addAttribute("server", server);
+        return "server/form";
+    }
+
+    @PostMapping("/{id}/update")
+    public String updateServer(@PathVariable String id, @ModelAttribute("server") Server server) {
+        server.setId(id);
+        serverService.updateServer(server);
+        return "redirect:/server";
+    }
 }

@@ -1,0 +1,11 @@
+[ {
+  "id" : "f23845cd-bf4e-4501-af06-0c219c1fe4ee",
+  "number" : 10,
+  "occupiedStatus" : "OCCUPIED",
+  "orders" : null
+}, {
+  "id" : "950edea7-50f2-4ac2-a817-bb916ccacfc1",
+  "number" : 5,
+  "occupiedStatus" : "FREE",
+  "orders" : null
+} ]

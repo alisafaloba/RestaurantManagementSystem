@@ -43,4 +43,18 @@ public class TableController {
         tableService.deleteTable(id);
         return "redirect:/table";
     }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Table table = tableService.getTableById(id);
+        model.addAttribute("table", table);
+        return "table/form";
+    }
+
+    @PostMapping("/{id}/update")
+    public String updateTable(@PathVariable String id, @ModelAttribute("table") Table table) {
+        table.setId(id);
+        tableService.updateTable(table);
+        return "redirect:/table";
+    }
 }

@@ -32,6 +32,17 @@
         a:hover {
             text-decoration: underline;
         }
+        .edit-btn {
+            background-color: #5bc0de;
+            margin-right: 5px;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #31b0d5;
+        }
     </style>
 </head>
 <body>
@@ -56,7 +67,12 @@
         <td th:text="${table.occupiedStatus}"></td>
         <td th:text="${table.orders != null ? table.orders.size() : 0}"></td>
         <td>
-            <form th:action="@{'/table/' + ${table.id} + '/delete'}" method="post">
+            <!-- Edit button -->
+            <a th:href="@{'/table/' + ${table.id} + '/edit'}">
+                <button type="button" class="edit-btn">Edit</button>
+            </a>
+            <!-- Delete button -->
+            <form th:action="@{'/table/' + ${table.id} + '/delete'}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
