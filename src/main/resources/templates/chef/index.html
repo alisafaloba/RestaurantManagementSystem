@@ -7,9 +7,9 @@
         table { border-collapse: collapse; width: 60%; }
         th, td { border: 1px solid #ddd; padding: 8px; }
         th { background-color: #f2f2f2; }
-        button { background-color: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        button { background-color: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
         button:hover { background-color: #c9302c; }
-        a { text-decoration: none; color: #007bff; }
+        a { text-decoration: none; color: #007bff; margin-right: 8px; }
         a:hover { text-decoration: underline; }
     </style>
 </head>
@@ -33,7 +33,8 @@
         <td th:text="${chef.name}"></td>
         <td th:text="${chef.specialization}"></td>
         <td>
-            <form th:action="@{'/chef/' + ${chef.id} + '/delete'}" method="post">
+            <a th:href="@{'/chef/' + ${chef.id} + '/edit'}">Edit</a>
+            <form th:action="@{'/chef/' + ${chef.id} + '/delete'}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>

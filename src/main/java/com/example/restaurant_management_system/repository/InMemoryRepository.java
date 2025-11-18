@@ -69,9 +69,7 @@ public class InMemoryRepository<T> implements CrudRepository<T> {
         return new ArrayList<>(storage);
     }
 
-    /**
-     * Extrage valoarea câmpului "id" din entitate folosind reflecția.
-     */
+
     private String getIdValue(T entity) {
         try {
             Field idField = findField(type, "id");

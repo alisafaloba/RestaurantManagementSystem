@@ -2,113 +2,113 @@ package com.example.restaurant_management_system.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class InFileRepository<T> implements CrudRepository<T> {
-
-    private final File file;
     private final Class<T> type;
-    private final ObjectMapper mapper = new ObjectMapper();
-    private List<T> storage;
+    private final String filePath;
+    private final ObjectMapper objectMapper;
+    private List<T> data;
 
-    public InFileRepository(Class<T> type, String filename) {
+    public InFileRepository(Class<T> type, String fileName) {
         this.type = type;
-        this.file = new File("src/main/resources/data/" + filename);
-        loadFromFile();
+        this.filePath = "src/main/resources/data/" + fileName;
+        this.objectMapper = new ObjectMapper();
+        this.data = loadData();
     }
 
-    private void loadFromFile() {
+    // ---------- Private Helpers ----------
+    private List<T> loadData() {
         try {
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-                storage = new ArrayList<>();
-                saveToFile();
-            } else {
-                storage = mapper.readValue(file, new TypeReference<List<T>>() {});
+            Path path = Paths.get(filePath);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path.getParent());
+                Files.createFile(path);
+                Files.write(path, "[]".getBytes());
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Error loading data from " + file.getName(), e);
+
+            var typeFactory = objectMapper.getTypeFactory();
+            var listType = typeFactory.constructCollectionType(List.class, this.type);
+
+            return objectMapper.readValue(path.toFile(), listType);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
-    private void saveToFile() {
+    private void saveData() {
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(file, storage);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(filePath), data);
         } catch (IOException e) {
-            throw new RuntimeException("Error saving data to " + file.getName(), e);
+            throw new RuntimeException("Error saving data to file: " + e.getMessage(), e);
         }
     }
 
+    private String getIdValue(T entity) {
+        Class<?> current = type;
+        while (current != null) {
+            try {
+                var field = current.getDeclaredField("id");
+                field.setAccessible(true);
+                return (String) field.get(entity);
+            } catch (NoSuchFieldException ignored) {
+                current = current.getSuperclass(); // check parent class
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        throw new RuntimeException("Entity must have a field named 'id'");
+    }
+
+
+    // ---------- CRUD ----------
     @Override
     public void save(T entity) {
         String id = getIdValue(entity);
-        T existing = findById(id);
-        if (existing == null) {
-            storage.add(entity);
-        } else {
-            update(entity);
-            return;
+        if (findById(id) != null) {
+            throw new IllegalArgumentException("Entity with ID " + id + " already exists.");
         }
-        saveToFile();
+        data.add(entity);
+        saveData();
     }
 
     @Override
     public void delete(String id) {
-        storage.removeIf(e -> id.equals(getIdValue(e)));
-        saveToFile();
+        data.removeIf(e -> getIdValue(e).equals(id));
+        saveData();
     }
 
     @Override
     public void update(T entity) {
         String id = getIdValue(entity);
-        for (int i = 0; i < storage.size(); i++) {
-            if (id.equals(getIdValue(storage.get(i)))) {
-                storage.set(i, entity);
-                saveToFile();
+        for (int i = 0; i < data.size(); i++) {
+            if (getIdValue(data.get(i)).equals(id)) {
+                data.set(i, entity);
+                saveData();
                 return;
             }
         }
-        throw new IllegalArgumentException("Entity with ID " + id + " not found");
+        throw new NoSuchElementException("Entity with ID " + id + " not found for update.");
     }
 
     @Override
     public T findById(String id) {
-        return storage.stream()
-                .filter(e -> id.equals(getIdValue(e)))
+        return data.stream()
+                .filter(e -> getIdValue(e).equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
     @Override
     public List<T> findAll() {
-        return new ArrayList<>(storage);
-    }
-
-    private String getIdValue(T entity) {
-        try {
-            Field idField = findField(type, "id");
-            idField.setAccessible(true);
-            Object value = idField.get(entity);
-            return value != null ? value.toString() : null;
-        } catch (Exception e) {
-            throw new RuntimeException("Entity must have an 'id' field", e);
-        }
-    }
-
-    private Field findField(Class<?> clazz, String fieldName) throws NoSuchFieldException {
-        while (clazz != null) {
-            try {
-                return clazz.getDeclaredField(fieldName);
-            } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        throw new NoSuchFieldException(fieldName);
+        return new ArrayList<>(data);
     }
 }

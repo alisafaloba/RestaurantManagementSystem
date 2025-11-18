@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public class ChefRepository extends InMemoryRepository<Chef> {
+public class ChefRepository extends InFileRepository<Chef> {
 
     public ChefRepository() {
-        super(Chef.class);
+        super(Chef.class,"chefs.json");
     }
 }

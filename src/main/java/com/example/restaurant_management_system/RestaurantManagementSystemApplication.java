@@ -22,10 +22,13 @@ public class RestaurantManagementSystemApplication {
     @Bean
     CommandLineRunner loadData(BillRepository billRepository) {
         return args -> {
-            billRepository.save(new Bill("B1", "O1", 120.5));
-            billRepository.save(new Bill("B2", "O2", 89.99));
-            billRepository.save(new Bill("B3", "O3", 45.0));
-
+            if (billRepository.findAll().isEmpty()) {
+                billRepository.save(new Bill("B1", "O1", 120.5));
+                billRepository.save(new Bill("B2", "O2", 89.99));
+                billRepository.save(new Bill("B3", "O3", 45.0));
+            }
         };
     }
+
 }
+

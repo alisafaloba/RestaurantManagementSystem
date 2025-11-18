@@ -1,5 +1,6 @@
 package com.example.restaurant_management_system.controller;
 
+import com.example.restaurant_management_system.model.Bill;
 import com.example.restaurant_management_system.model.Chef;
 import com.example.restaurant_management_system.service.ChefService;
 import org.springframework.stereotype.Controller;
@@ -46,6 +47,22 @@ public class ChefController {
     @PostMapping("/{id}/delete")
     public String deleteChef(@PathVariable String id) {
         chefService.deleteChef(id);
+        return "redirect:/chef";
+    }
+
+    // GET /chef/{id}/edit → show edit form
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Chef chef = chefService.getChefById(id);
+        model.addAttribute("chef", chef);
+        return "chef/form";
+    }
+
+
+    @PostMapping("/{id}/update")
+    public String updateChef(@PathVariable String id, @ModelAttribute Chef chef) {
+        chef.setId(id);
+        chefService.updateChef(chef);
         return "redirect:/chef";
     }
 }

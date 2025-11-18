@@ -25,6 +25,13 @@
         button:hover {
             background-color: #c9302c;
         }
+        .edit-btn {
+            background-color: #5bc0de;
+            margin-right: 5px;
+        }
+        .edit-btn:hover {
+            background-color: #31b0d5;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +45,7 @@
         <th>ID</th>
         <th>Order ID</th>
         <th>Total Amount</th>
-        <th>Action</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -47,7 +54,10 @@
         <td th:text="${bill.orderId}"></td>
         <td th:text="${bill.totalAmount}"></td>
         <td>
-            <form th:action="@{'/bill/' + ${bill.id} + '/delete'}" method="post">
+            <a th:href="@{'/bill/' + ${bill.id} + '/edit'}">
+                <button type="button" class="edit-btn">Edit</button>
+            </a>
+            <form th:action="@{'/bill/' + ${bill.id} + '/delete'}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>

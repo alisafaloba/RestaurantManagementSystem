@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Chef</title>
+    <title th:text="${chef.id} == null ? 'Create New Chef' : 'Edit Chef'">Chef Form</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; }
         form { display: flex; flex-direction: column; gap: 12px; }
@@ -15,9 +15,10 @@
     </style>
 </head>
 <body>
-<h1>Create New Chef</h1>
+<h1 th:text="${chef.id} == null ? 'Create New Chef' : 'Edit Chef'">Chef Form</h1>
 
-<form th:action="@{/chef}" th:object="${chef}" method="post">
+<form th:action="${chef.id} == null ? @{/chef} : @{/chef/{id}/update(id=${chef.id})}"
+      th:object="${chef}" method="post">
     <div>
         <label for="name">Name:</label>
         <input type="text" th:field="*{name}" id="name" required>
@@ -28,7 +29,7 @@
         <input type="text" th:field="*{specialization}" id="specialty" required>
     </div>
 
-    <button type="submit">Save</button>
+    <button type="submit" th:text="${chef.id} == null ? 'Create' : 'Update'">Submit</button>
 </form>
 
 <a th:href="@{/chef}">Back to list</a>
