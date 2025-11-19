@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Order Line</title>
+    <title th:text="${orderline.id} == null ? 'Create Order Line' : 'Edit Order Line'">Order Line Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,9 +45,10 @@
     </style>
 </head>
 <body>
-<h1>Create New Order Line</h1>
+<h1 th:text="${orderline.id} == null ? 'Create New Order Line' : 'Edit Order Line'"></h1>
 
-<form th:action="@{/orderline}" th:object="${orderline}" method="post">
+<form th:action="${orderline.id} == null ? @{/orderline} : @{'/orderline/' + ${orderline.id} + '/update'}"
+      th:object="${orderline}" method="post">
 
     <div>
         <label for="menuItemId">Menu Item ID:</label>
@@ -59,7 +60,7 @@
         <input type="number" step="0.01" th:field="*{quantity}" id="quantity" required>
     </div>
 
-    <button type="submit">Save</button>
+    <button type="submit" th:text="${orderline.id} == null ? 'Save' : 'Update'"></button>
 </form>
 
 <a th:href="@{/orderline}">Back to list</a>

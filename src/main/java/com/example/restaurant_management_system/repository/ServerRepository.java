@@ -4,8 +4,8 @@ import com.example.restaurant_management_system.model.Server;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ServerRepository extends InMemoryRepository<Server> {
+public class ServerRepository extends InFileRepository<Server> {
     public ServerRepository() {
-        super(Server.class);
+        super(Server.class, "server.json");
     }
 }

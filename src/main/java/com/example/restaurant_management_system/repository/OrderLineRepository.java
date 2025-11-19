@@ -4,8 +4,8 @@ import com.example.restaurant_management_system.model.OrderLine;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OrderLineRepository extends InMemoryRepository<OrderLine> {
+public class OrderLineRepository extends InFileRepository<OrderLine> {
     public OrderLineRepository() {
-        super(OrderLine.class);
+        super(OrderLine.class,  "orderLine.json");
     }
 }

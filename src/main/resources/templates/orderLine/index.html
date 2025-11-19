@@ -25,6 +25,24 @@
         button:hover {
             background-color: #c9302c;
         }
+        .edit-btn {
+            background-color: #5bc0de;
+            margin-right: 5px;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #31b0d5;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -47,7 +65,12 @@
         <td th:text="${orderline.menuItemId}"></td>
         <td th:text="${orderline.quantity}"></td>
         <td>
-            <form th:action="@{'/orderline/' + ${orderline.id} + '/delete'}" method="post">
+            <!-- Edit button -->
+            <a th:href="@{'/orderline/' + ${orderline.id} + '/edit'}">
+                <button type="button" class="edit-btn">Edit</button>
+            </a>
+            <!-- Delete button -->
+            <form th:action="@{'/orderline/' + ${orderline.id} + '/delete'}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>

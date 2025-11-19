@@ -1,11 +1,5 @@
 [ {
-  "id" : "B2",
-  "orderId" : "O4",
-  "totalAmount" : 2.0
 }, {
-  "id" : "B3",
-  "orderId" : "O3",
-  "totalAmount" : 45.0
 }, {
   "id" : "B1",
   "orderId" : "O1",

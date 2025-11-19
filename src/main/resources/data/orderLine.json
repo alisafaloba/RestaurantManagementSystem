@@ -1,0 +1,52 @@
+[
+  {
+    "id": "OL1",
+    "menuItemId": "M1",
+    "quantity": 1
+  },
+  {
+    "id": "OL2",
+    "menuItemId": "M3",
+    "quantity": 2
+  },
+  {
+    "id": "OL3",
+    "menuItemId": "M5",
+    "quantity": 1
+  },
+  {
+    "id": "OL4",
+    "menuItemId": "M7",
+    "quantity": 3
+  },
+  {
+    "id": "OL5",
+    "menuItemId": "M2",
+    "quantity": 1
+  },
+  {
+    "id": "OL6",
+    "menuItemId": "M9",
+    "quantity": 2
+  },
+  {
+    "id": "OL7",
+    "menuItemId": "M10",
+    "quantity": 1
+  },
+  {
+    "id": "OL8",
+    "menuItemId": "M4",
+    "quantity": 2
+  },
+  {
+    "id": "OL9",
+    "menuItemId": "M6",
+    "quantity": 1.5
+  },
+  {
+    "id": "OL10",
+    "menuItemId": "M8",
+    "quantity": 1
+  }
+]
