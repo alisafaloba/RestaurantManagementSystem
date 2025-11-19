@@ -1,0 +1,62 @@
+[
+  {
+    "id": "M1",
+    "name": "Margherita Pizza",
+    "price": 8.50,
+    "allergens": ["gluten", "lactose"]
+  },
+  {
+    "id": "M2",
+    "name": "Spaghetti Carbonara",
+    "price": 11.00,
+    "allergens": ["gluten", "egg", "lactose"]
+  },
+  {
+    "id": "M3",
+    "name": "Caesar Salad",
+    "price": 7.80,
+    "allergens": ["egg", "fish"]
+  },
+  {
+    "id": "M4",
+    "name": "Grilled Chicken Breast",
+    "price": 12.90,
+    "allergens": []
+  },
+  {
+    "id": "M5",
+    "name": "Beef Burger",
+    "price": 10.50,
+    "allergens": ["gluten", "sesame"]
+  },
+  {
+    "id": "M6",
+    "name": "French Fries",
+    "price": 3.90,
+    "allergens": []
+  },
+  {
+    "id": "M7",
+    "name": "Tomato Soup",
+    "price": 5.50,
+    "allergens": ["celery"]
+  },
+  {
+    "id": "M8",
+    "name": "Chocolate Cake",
+    "price": 6.20,
+    "allergens": ["gluten", "egg", "lactose"]
+  },
+  {
+    "id": "M9",
+    "name": "Cappuccino",
+    "price": 3.80,
+    "allergens": ["lactose"]
+  },
+  {
+    "id": "M10",
+    "name": "Fresh Orange Juice",
+    "price": 4.00,
+    "allergens": []
+  }
+]

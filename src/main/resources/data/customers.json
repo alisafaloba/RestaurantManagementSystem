@@ -1,0 +1,62 @@
+[
+  {
+    "id": "CU1",
+    "name": "Anna Müller",
+    "orders": [],
+    "emailaddress": "anna.mueller@example.com"
+  },
+  {
+    "id": "CU2",
+    "name": "Lukas Schneider",
+    "orders": [],
+    "emailaddress": "lukas.schneider@example.com"
+  },
+  {
+    "id": "CU3",
+    "name": "Sophie Fischer",
+    "orders": [],
+    "emailaddress": "sophie.fischer@example.com"
+  },
+  {
+    "id": "CU4",
+    "name": "Jonas Weber",
+    "orders": [],
+    "emailaddress": "jonas.weber@example.com"
+  },
+  {
+    "id": "CU5",
+    "name": "Laura Becker",
+    "orders": [],
+    "emailaddress": "laura.becker@example.com"
+  },
+  {
+    "id": "CU6",
+    "name": "Felix Wagner",
+    "orders": [],
+    "emailaddress": "felix.wagner@example.com"
+  },
+  {
+    "id": "CU7",
+    "name": "Clara Hoffmann",
+    "orders": [],
+    "emailaddress": "clara.hoffmann@example.com"
+  },
+  {
+    "id": "CU8",
+    "name": "Maximilian Braun",
+    "orders": [],
+    "emailaddress": "maximilian.braun@example.com"
+  },
+  {
+    "id": "CU9",
+    "name": "Emily Schäfer",
+    "orders": [],
+    "emailaddress": "emily.schaefer@example.com"
+  },
+  {
+    "id": "CU10",
+    "name": "Niklas Koch",
+    "orders": [],
+    "emailaddress": "niklas.koch@example.com"
+  }
+]
