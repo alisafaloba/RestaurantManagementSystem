@@ -1,53 +1,45 @@
-
-[
-  {
-    "id": "C1",
-    "name": "John Petrescu",
-    "specialization": "Grill"
-  },
-  {
-    "id": "C2",
-    "name": "Mara Ionescu",
-    "specialization": "Pastry"
-  },
-  {
-    "id": "C3",
-    "name": "Alex Dumitru",
-    "specialization": "Seafood"
-  },
-  {
-    "id": "C4",
-    "name": "Cristina Gheorghe",
-    "specialization": "Italian Cuisine"
-  },
-  {
-    "id": "C5",
-    "name": "Radu Marinescu",
-    "specialization": "Steakhouse"
-  },
-  {
-    "id": "C6",
-    "name": "Oana Tudor",
-    "specialization": "Vegan Dishes"
-  },
-  {
-    "id": "C7",
-    "name": "Vlad Pop",
-    "specialization": "Asian Fusion"
-  },
-  {
-    "id": "C8",
-    "name": "Larisa Neagu",
-    "specialization": "French Cuisine"
-  },
-  {
-    "id": "C9",
-    "name": "Mihai Stoica",
-    "specialization": "Desserts"
-  },
-  {
-    "id": "C10",
-    "name": "Elena Pavel",
-    "specialization": "Mediterranean"
-  }
-]
+[ {
+  "id" : "C1",
+  "name" : "John Petrescu",
+  "specialization" : "Grill"
+}, {
+  "id" : "C2",
+  "name" : "Mara Ionescu",
+  "specialization" : "Pastry"
+}, {
+  "id" : "C3",
+  "name" : "Alex Dumitru",
+  "specialization" : "Seafood"
+}, {
+  "id" : "C4",
+  "name" : "Cristina Gheorghe",
+  "specialization" : "Italian Cuisine"
+}, {
+  "id" : "C5",
+  "name" : "Radu Marinescu",
+  "specialization" : "Steakhouse"
+}, {
+  "id" : "C6",
+  "name" : "Oana Tudor",
+  "specialization" : "Vegan Dishes"
+}, {
+  "id" : "C7",
+  "name" : "Vlad Pop",
+  "specialization" : "Asian Fusion"
+}, {
+  "id" : "C8",
+  "name" : "Larisa Neagu",
+  "specialization" : "French Cuisine"
+}, {
+  "id" : "C9",
+  "name" : "Mihai Stoica",
+  "specialization" : "Desserts"
+}, {
+  "id" : "C10",
+  "name" : "Elena Pavel",
+  "specialization" : "Mediterranean"
+}, {
+  "id" : "658f87e9-6902-4e04-a73f-e08a6c083f0a",
+  "name" : "Alisa-Maria",
+  "specialization" : "Burger"
+} ]

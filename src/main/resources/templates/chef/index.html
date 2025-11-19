@@ -2,46 +2,51 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Menu Items</title>
+    <title>Chefs</title>
     <style>
         table { border-collapse: collapse; width: 70%; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
-        button { background-color: #d9534f; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        button { background-color: #d9534f; color: white; border: none;
+            padding: 5px 10px; cursor: pointer; border-radius: 4px; }
         button:hover { background-color: #c9302c; }
         a { text-decoration: none; color: #007bff; margin-right: 8px; }
         a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-<h1>Menu Items</h1>
 
-<a th:href="@{/menuitem/new}">Add New Menu Item</a>
+<h1>Chefs</h1>
+
+<a th:href="@{/chef/new}">Add New Chef</a>
 
 <table>
     <thead>
     <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Price</th>
-        <th>Description</th>
+        <th>Specialization</th>
         <th>Action</th>
     </tr>
     </thead>
+
     <tbody>
-    <tr th:each="menuItem : ${menuItems}">
-        <td th:text="${menuItem.id}"></td>
-        <td th:text="${menuItem.name}"></td>
-        <td th:text="${menuItem.price}"></td>
-        <td th:text="${menuItem.description}"></td>
+    <tr th:each="chef : ${chefs}">
+        <td th:text="${chef.id}"></td>
+        <td th:text="${chef.name}"></td>
+        <td th:text="${chef.specialization}"></td>
+
         <td>
-            <a th:href="@{'/menuitem/' + ${menuItem.id} + '/edit'}">Edit</a>
-            <form th:action="@{'/menuitem/' + ${menuItem.id} + '/delete'}" method="post" style="display:inline;">
+            <a th:href="@{'/chef/' + ${chef.id} + '/edit'}">Edit</a>
+
+            <form th:action="@{'/chef/' + ${chef.id} + '/delete'}"
+                  method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>
