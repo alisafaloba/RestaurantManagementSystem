@@ -1,11 +1,51 @@
 [ {
-  "id" : "f23845cd-bf4e-4501-af06-0c219c1fe4ee",
-  "number" : 10,
-  "occupiedStatus" : "OCCUPIED",
-  "orders" : null
-}, {
-  "id" : "950edea7-50f2-4ac2-a817-bb916ccacfc1",
-  "number" : 5,
+  "id" : "T1",
+  "number" : 16,
   "occupiedStatus" : "FREE",
   "orders" : null
+}, {
+  "id" : "T2",
+  "number" : 2,
+  "occupiedStatus" : "OCCUPIED",
+  "orders" : [ ]
+}, {
+  "id" : "T3",
+  "number" : 3,
+  "occupiedStatus" : "FREE",
+  "orders" : [ ]
+}, {
+  "id" : "T4",
+  "number" : 4,
+  "occupiedStatus" : "OCCUPIED",
+  "orders" : [ ]
+}, {
+  "id" : "T5",
+  "number" : 5,
+  "occupiedStatus" : "FREE",
+  "orders" : [ ]
+}, {
+  "id" : "T6",
+  "number" : 6,
+  "occupiedStatus" : "OCCUPIED",
+  "orders" : [ ]
+}, {
+  "id" : "T7",
+  "number" : 7,
+  "occupiedStatus" : "FREE",
+  "orders" : [ ]
+}, {
+  "id" : "T8",
+  "number" : 8,
+  "occupiedStatus" : "OCCUPIED",
+  "orders" : [ ]
+}, {
+  "id" : "T9",
+  "number" : 9,
+  "occupiedStatus" : "FREE",
+  "orders" : [ ]
+}, {
+  "id" : "T10",
+  "number" : 10,
+  "occupiedStatus" : "OCCUPIED",
+  "orders" : [ ]
 } ]

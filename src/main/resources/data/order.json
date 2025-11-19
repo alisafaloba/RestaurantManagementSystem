@@ -3,7 +3,7 @@
     "id": "O1",
     "customerId": "C101",
     "tableId": "T1",
-    "status": "Open",
+    "status": "OPEN",
     "orderLines": [
       { "id": "OL1", "menuItemId": "M10", "quantity": 2 },
       { "id": "OL2", "menuItemId": "M3", "quantity": 1 }
@@ -17,7 +17,7 @@
     "id": "O2",
     "customerId": "C102",
     "tableId": "T3",
-    "status": "Closed",
+    "status": "CLOSED",
     "orderLines": [
       { "id": "OL3", "menuItemId": "M5", "quantity": 1 }
     ],
@@ -30,7 +30,7 @@
     "id": "O3",
     "customerId": "C103",
     "tableId": "T2",
-    "status": "Open",
+    "status": "OPEN",
     "orderLines": [
       { "id": "OL4", "menuItemId": "M11", "quantity": 3 },
       { "id": "OL5", "menuItemId": "M4", "quantity": 1 }
@@ -44,7 +44,7 @@
     "id": "O4",
     "customerId": "C104",
     "tableId": "T5",
-    "status": "Closed",
+    "status": "CLOSED",
     "orderLines": [
       { "id": "OL6", "menuItemId": "M2", "quantity": 2 }
     ],
@@ -57,7 +57,7 @@
     "id": "O5",
     "customerId": "C105",
     "tableId": "T4",
-    "status": "Open",
+    "status": "OPEN",
     "orderLines": [
       { "id": "OL7", "menuItemId": "M7", "quantity": 1 },
       { "id": "OL8", "menuItemId": "M9", "quantity": 1 }
@@ -71,7 +71,7 @@
     "id": "O6",
     "customerId": "C106",
     "tableId": "T7",
-    "status": "Closed",
+    "status": "CLOSED",
     "orderLines": [
       { "id": "OL9", "menuItemId": "M8", "quantity": 2 }
     ],
@@ -84,7 +84,7 @@
     "id": "O7",
     "customerId": "C107",
     "tableId": "T6",
-    "status": "Open",
+    "status": "OPEN",
     "orderLines": [
       { "id": "OL10", "menuItemId": "M1", "quantity": 1 },
       { "id": "OL11", "menuItemId": "M14", "quantity": 2 }
@@ -98,7 +98,7 @@
     "id": "O8",
     "customerId": "C108",
     "tableId": "T9",
-    "status": "Closed",
+    "status": "CLOSED",
     "orderLines": [
       { "id": "OL12", "menuItemId": "M6", "quantity": 1 }
     ],
@@ -111,7 +111,7 @@
     "id": "O9",
     "customerId": "C109",
     "tableId": "T8",
-    "status": "Open",
+    "status": "OPEN",
     "orderLines": [
       { "id": "OL13", "menuItemId": "M12", "quantity": 2 },
       { "id": "OL14", "menuItemId": "M3", "quantity": 1 }
@@ -125,7 +125,7 @@
     "id": "O10",
     "customerId": "C110",
     "tableId": "T10",
-    "status": "Closed",
+    "status": "CLOSED",
     "orderLines": [
       { "id": "OL15", "menuItemId": "M5", "quantity": 1 }
     ],
