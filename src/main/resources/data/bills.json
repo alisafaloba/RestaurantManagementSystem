@@ -1,41 +1,7 @@
 [ {
-  "id" : "b1",
-  "orderId" : "o100",
-  "totalAmount" : 45.5
 }, {
-  "id" : "b2",
-  "orderId" : "o101",
-  "totalAmount" : 72.3
-}, {
-  "id" : "b3",
-  "orderId" : "o102",
-  "totalAmount" : 59.99
-}, {
-  "id" : "b4",
-  "orderId" : "o103",
-  "totalAmount" : 120.0
-}, {
-  "id" : "b5",
-  "orderId" : "o104",
-  "totalAmount" : 38.75
-}, {
-  "id" : "b7",
-  "orderId" : "o106",
-  "totalAmount" : 97.25
-}, {
-  "id" : "b8",
-  "orderId" : "o107",
-  "totalAmount" : 56.86
 }, {
   "id" : "B1",
   "orderId" : "O1",
   "totalAmount" : 120.5
-}, {
-  "id" : "B3",
-  "orderId" : "O3",
-  "totalAmount" : 45.0
-}, {
-  "id" : "5dd6537d-9e54-487f-90a8-86e66f3608eb",
-  "orderId" : "n8699",
-  "totalAmount" : 0.09
 } ]
