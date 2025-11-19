@@ -1,0 +1,11 @@
+[ {
+  "id" : "8ecba87b-2747-4064-9589-c551c1dd2c9d",
+  "name" : "Fish and chips",
+  "price" : 80.0,
+  "allergens" : [ "nuts", "gluten" ]
+}, {
+  "id" : "9fca4176-fb6f-479f-830a-aec2547677d1",
+  "name" : "Salmon",
+  "price" : 91.0,
+  "allergens" : [ "dairy", "gluten" ]
+} ]
