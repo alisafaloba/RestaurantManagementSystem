@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/orderassignment")
 public class OrderAssignmentController {
@@ -22,20 +24,40 @@ public class OrderAssignmentController {
         return "orderassignment/index";
     }
 
+    //GetMapping("/new")
+   // public String showCreateForm(Model model) {
+        //model.addAttribute("assignment", new OrderAssignment());
+       // return "orderassignment/form";
+    //}
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("assignment", new OrderAssignment());
+    public String showCreateForm(@RequestParam(value = "orderId", required = false) String orderId,
+                                 Model model) {
+
+        OrderAssignment assignment = new OrderAssignment();
+        assignment.setOrderId(orderId); // pre-fill if coming from Order Details
+
+        model.addAttribute("assignment", assignment);
         return "orderassignment/form";
     }
 
+
     @PostMapping
-    public String createOrderAssignment(@ModelAttribute("assignment") OrderAssignment orderAssignment) {
-        if (orderAssignment.getId() == null || orderAssignment.getId().isEmpty()) {
-            orderAssignment.setId(java.util.UUID.randomUUID().toString());
+    public String createAssignment(@ModelAttribute("assignment") OrderAssignment assignment) {
+
+        if (assignment.getId() == null || assignment.getId().isEmpty()) {
+            assignment.setId(UUID.randomUUID().toString());
         }
-        orderAssignmentService.addAssignment(orderAssignment);
+
+        orderAssignmentService.addAssignment(assignment);
+
+        // FIX: return to the order details page
+        if (assignment.getOrderId() != null) {
+            return "redirect:/order/" + assignment.getOrderId() + "/details";
+        }
+
         return "redirect:/orderassignment";
     }
+
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {

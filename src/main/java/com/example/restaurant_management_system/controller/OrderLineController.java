@@ -19,35 +19,40 @@ public class OrderLineController {
     @GetMapping
     public String listOrderLines(Model model) {
         model.addAttribute("orderlines", orderLineService.getAllOrderLines());
-        return "orderline/index";
+        return "orderLine/index";
     }
 
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("orderline", new OrderLine());
-        return "orderline/form";
-    }
+    //@GetMapping("/new")
+    //public String showCreateForm(Model model) {
+       // model.addAttribute("orderline", new OrderLine());
+       // return "orderline/form";
+    //}
 
     @PostMapping
     public String createOrderLine(@ModelAttribute("orderline") OrderLine orderLine) {
+
         if (orderLine.getId() == null || orderLine.getId().isEmpty()) {
             orderLine.setId(java.util.UUID.randomUUID().toString());
         }
+
         orderLineService.addOrderLine(orderLine);
-        return "redirect:/orderline";
+
+        // if created *from an order*, go back to that order’s details
+        if (orderLine.getOrderId() != null) {
+            return "redirect:/order/" + orderLine.getOrderId() + "/details";
+        }
+
+        return "redirect:/orderline"; // fallback
     }
 
-    @PostMapping("/{id}/delete")
-    public String deleteOrderLine(@PathVariable String id) {
-        orderLineService.deleteOrderLine(id);
-        return "redirect:/orderline";
-    }
+
+
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
         OrderLine orderLine = orderLineService.getOrderLineById(id);
         model.addAttribute("orderline", orderLine);
-        return "orderline/form";
+        return "orderLine/form";
     }
 
     @PostMapping("/{id}/update")
@@ -56,4 +61,32 @@ public class OrderLineController {
         orderLineService.updateOrderLine(orderLine);
         return "redirect:/orderline";
     }
+
+    @GetMapping("/new")
+    public String showCreateForm(@RequestParam(value = "orderId", required = false) String orderId,
+                                 Model model) {
+
+        OrderLine line = new OrderLine();
+        line.setOrderId(orderId); // prefill like assignment controller
+
+        model.addAttribute("orderline", line);
+        return "orderLine/form";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteOrderLine(@PathVariable String id) {
+
+        OrderLine line = orderLineService.getOrderLineById(id);
+        String orderId = (line != null) ? line.getOrderId() : null;
+
+        orderLineService.deleteOrderLine(id);
+
+        if (orderId != null) {
+            return "redirect:/order/" + orderId + "/details";
+        }
+
+        return "redirect:/orderline";
+    }
+
+
 }

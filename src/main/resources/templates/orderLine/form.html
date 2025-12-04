@@ -50,6 +50,9 @@
 <form th:action="${orderline.id} == null ? @{/orderline} : @{'/orderline/' + ${orderline.id} + '/update'}"
       th:object="${orderline}" method="post">
 
+    <!-- Hidden orderId so it gets saved -->
+    <input type="hidden" th:field="*{orderId}">
+
     <div>
         <label for="menuItemId">Menu Item ID:</label>
         <input type="text" th:field="*{menuItemId}" id="menuItemId" required>
@@ -62,6 +65,7 @@
 
     <button type="submit" th:text="${orderline.id} == null ? 'Save' : 'Update'"></button>
 </form>
+
 
 <a th:href="@{/orderline}">Back to list</a>
 

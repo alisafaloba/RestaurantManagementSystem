@@ -34,4 +34,10 @@ public class OrderLineService {
     public void deleteOrderLine(String id) {
         orderLineRepository.delete(id);
     }
+    public List<OrderLine> getOrderLinesByOrderId(String orderId) {
+        return orderLineRepository.findAll().stream()
+                .filter(line -> orderId.equals(line.getOrderId()))
+                .toList();
+    }
+
 }

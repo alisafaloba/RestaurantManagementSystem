@@ -51,5 +51,7 @@ public class Order {
 
     public List<OrderAssignment> getAssignments() { return assignments; }
     public void setAssignments(List<OrderAssignment> assignments) { this.assignments = assignments; }
+
+
 }
 

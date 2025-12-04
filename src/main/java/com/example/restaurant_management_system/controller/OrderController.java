@@ -1,6 +1,7 @@
 package com.example.restaurant_management_system.controller;
 
 import com.example.restaurant_management_system.model.Order;
+import com.example.restaurant_management_system.model.OrderAssignment;
 import com.example.restaurant_management_system.model.OrderStatus;
 import com.example.restaurant_management_system.service.OrderService;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+
 
     // GET /order → show all orders
     @GetMapping
@@ -72,4 +74,16 @@ public class OrderController {
         orderService.updateOrder(order);
         return "redirect:/order";
     }
+
+    @GetMapping("/{id}/details")
+    public String showOrderDetails(@PathVariable String id, Model model) {
+        Order order = orderService.getOrderById(id);
+        model.addAttribute("order", order);
+        return "order/details"; // templates/order/details.html
+    }
+
+
+
+
+
 }

@@ -2,68 +2,106 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${order.id} == null ? 'Create Order' : 'Edit Order'">Order Form</title>
+    <title th:text="${order.id == null} ? 'Create Order' : 'Edit Order'"></title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
+            max-width: 550px;
             margin: 40px auto;
+            padding: 10px;
         }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
         form {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
         }
-        label { font-weight: bold; }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
         input, select {
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 14px;
         }
+
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 8px 12px;
+            padding: 10px 16px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 6px;
+            font-size: 15px;
         }
-        button:hover { background-color: #45a049; }
-        a {
-            display: inline-block;
-            margin-top: 12px;
-            text-decoration: none;
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 15px;
             color: #007bff;
+            text-decoration: none;
         }
-        a:hover { text-decoration: underline; }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
-<body>
-<h1 th:text="${order.id} == null ? 'Create New Order' : 'Edit Order'"></h1>
 
-<form th:action="${order.id} == null ? @{/order} : @{'/order/' + ${order.id} + '/update'}"
+<body>
+
+<h1 th:text="${order.id == null} ? 'Create New Order' : 'Edit Order'"></h1>
+
+<form th:action="${order.id == null} ? @{/order} : @{'/order/' + ${order.id} + '/update'}"
       th:object="${order}" method="post">
 
+    <!-- Customer -->
     <div>
-        <label for="customerId">Customer ID:</label>
-        <input type="text" id="customerId" th:field="*{customerId}" required>
+        <label for="customerId">Customer ID</label>
+        <input id="customerId" th:field="*{customerId}" placeholder="Enter customer ID" required>
     </div>
 
+    <!-- Table -->
     <div>
-        <label for="tableId">Table ID:</label>
-        <input type="text" id="tableId" th:field="*{tableId}" required>
+        <label for="tableId">Table ID</label>
+        <input id="tableId" th:field="*{tableId}" placeholder="Enter table number" required>
     </div>
 
+    <!-- Status -->
     <div>
-        <label for="status">Status:</label>
+        <label for="status">Order Status</label>
         <select id="status" th:field="*{status}">
             <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
         </select>
     </div>
 
-    <button type="submit" th:text="${order.id} == null ? 'Save' : 'Update'"></button>
+    <button type="submit" th:text="${order.id == null} ? 'Save Order' : 'Update Order'"></button>
 </form>
 
-<a th:href="@{/order}">Back to list</a>
+<a class="back-link" th:href="@{/order}">← Back to Order List</a>
+
 </body>
 </html>
