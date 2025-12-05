@@ -18,8 +18,9 @@ public class TableService {
         return tableRepository.findAll();
     }
 
-    public Table getTableById(String number) {
-        return tableRepository.findById(number);
+    // Change ID type from String to Long, and use JpaRepository.findById
+    public Table getTableById(Long id) {
+        return tableRepository.findById(id).orElse(null);
     }
 
     public void addTable(Table table) {
@@ -27,11 +28,12 @@ public class TableService {
     }
 
     public void updateTable(Table table) {
-        tableRepository.update(table);
+        // JpaRepository.save() handles both insert and update
+        tableRepository.save(table);
     }
 
-    public void deleteTable(String number) {
-        tableRepository.delete(number);
+    // Change ID type from String to Long, and use JpaRepository.deleteById
+    public void deleteTable(Long id) {
+        tableRepository.deleteById(id);
     }
-
 }

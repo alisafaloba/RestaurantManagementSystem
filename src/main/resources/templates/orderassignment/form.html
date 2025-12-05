@@ -2,7 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${assignment.id != null} ? 'Edit Order Assignment' : 'Assign New Order'">Order Assignment Form</title>
+    <title th:text="${assignment.id != null} ? 'Edit Order Assignment' : 'Assign New Order'">
+        Order Assignment Form
+    </title>
+
     <style>
         .form-container {
             max-width: 500px;
@@ -16,7 +19,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"] {
+        select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -49,36 +52,59 @@
     </style>
 </head>
 <body>
+
 <h1 th:text="${assignment.id != null} ? 'Edit Order Assignment' : 'Assign New Order'">
     Order Assignment Form
 </h1>
 
-<!-- Error Message Display -->
+<!-- Error Message -->
 <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
 <div class="form-container">
+
     <form th:action="${assignment.id != null} ?
                           @{'/orderassignment/' + ${assignment.id} + '/update'} :
                           @{/orderassignment}"
-          method="post" th:object="${assignment}">
+          method="post"
+          th:object="${assignment}">
 
+        <!-- ORDER DROPDOWN -->
         <div class="form-group">
-            <label for="orderId">Order ID:</label>
-            <input type="text" id="orderId" th:field="*{orderId}" required>
+            <label for="order">Order:</label>
+            <select id="order" th:field="*{order}" required>
+                <option value="" disabled>Select order</option>
+                <option th:each="o : ${orders}"
+                        th:value="${o.id}"
+                        th:text="'Order #' + ${o.id}"
+                        th:selected="${assignment.order != null and assignment.order.id == o.id}">
+                </option>
+            </select>
         </div>
 
+        <!-- STAFF DROPDOWN -->
         <div class="form-group">
-            <label for="staffId">Staff ID:</label>
-            <input type="text" id="staffId" th:field="*{staffId}" required>
+            <label for="staff">Staff:</label>
+            <select id="staff" th:field="*{staff}" required>
+                <option value="" disabled>Select staff member</option>
+                <option th:each="s : ${staffList}"
+                        th:value="${s.id}"
+                        th:text="${s.name}"
+                        th:selected="${assignment.staff != null and assignment.staff.id == s.id}">
+                </option>
+            </select>
         </div>
 
+        <!-- ACTION BUTTONS -->
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">
                 <span th:text="${assignment.id != null} ? 'Update' : 'Create'">Save</span>
             </button>
+
             <a th:href="@{/orderassignment}" class="btn btn-secondary">Cancel</a>
         </div>
+
     </form>
 </div>
+
 </body>
 </html>

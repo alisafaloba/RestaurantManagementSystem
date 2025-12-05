@@ -1,19 +1,19 @@
 package com.example.restaurant_management_system.controller;
 
-import com.example.restaurant_management_system.model.Bill;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import com.example.restaurant_management_system.model.Customer;
 import com.example.restaurant_management_system.service.CustomerService;
+import jakarta.validation.Valid; // <-- ADD VALIDATION IMPORT
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult; // <-- ADD VALIDATION IMPORT
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+// Removed java.util.UUID import
 
 @Controller
 @RequestMapping ("/customer")
 public class CustomerController {
 
-    private CustomerService customerService;
+    private final CustomerService customerService;
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
@@ -30,31 +30,45 @@ public class CustomerController {
         return "customer/form";
     }
 
+    // POST /customer (Requires @Valid and error handling)
     @PostMapping
-    public String createCustomer(@ModelAttribute Customer customer) {
-        if (customer.getId() == null || customer.getId().isEmpty()) {
-            customer.setId(java.util.UUID.randomUUID().toString());
+    public String createCustomer(@Valid @ModelAttribute Customer customer,
+                                 BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "customer/form"; // Return to form to show validation errors
         }
+
+        // Manual ID generation is removed (handled by JPA)
         customerService.addCustomer(customer);
         return "redirect:/customer";
     }
 
+    // POST /customer/{id}/delete (ID is now Long)
     @PostMapping("/{id}/delete")
-    public String deleteCustomer(@PathVariable String id) {
+    public String deleteCustomer(@PathVariable Long id) { // Changed type to Long
         customerService.deleteCustomer(id);
         return "redirect:/customer";
     }
 
+    // GET /customer/{id}/edit (ID is now Long)
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) { // Changed type to Long
         Customer customer = customerService.getCustomerById(id);
         model.addAttribute("customer", customer);
-        return "Customer/form";
+        return "customer/form"; // Corrected case
     }
 
-    // POST /bill/{id}/update → handle edit submission
+    // POST /customer/{id}/update (ID is now Long, requires @Valid)
     @PostMapping("/{id}/update")
-    public String updateCustomer(@PathVariable String id, @ModelAttribute Customer customer) {
+    public String updateCustomer(@PathVariable Long id, // Changed type to Long
+                                 @Valid @ModelAttribute Customer customer,
+                                 BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "customer/form"; // Return to form if validation fails
+        }
+
         customer.setId(id);
         customerService.updateCustomer(customer);
         return "redirect:/customer";

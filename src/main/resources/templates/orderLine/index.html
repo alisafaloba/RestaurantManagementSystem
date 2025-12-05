@@ -2,80 +2,51 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Order Line List</title>
+    <title>Order Lines</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 60%;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        button {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #c9302c;
-        }
-        .edit-btn {
-            background-color: #5bc0de;
-            margin-right: 5px;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .edit-btn:hover {
-            background-color: #31b0d5;
-        }
-        a {
-            text-decoration: none;
-            color: #007bff;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 32px auto; }
+        table { border-collapse: collapse; width:100%; }
+        th, td { border:1px solid #ddd; padding:10px; text-align:left; }
+        th { background:#f2f2f2; }
+        .btn { padding:6px 10px; border-radius:4px; text-decoration:none; border:none; cursor:pointer; }
+        .btn-edit { background:#5bc0de; color:#fff; }
+        .btn-delete { background:#d9534f; color:#fff; }
+        a { color:#007bff; text-decoration:none; }
     </style>
 </head>
 <body>
-<h1>Order Line List</h1>
 
-<a th:href="@{/orderline/new}">Add New Order Line</a>
+<h1>Order Lines</h1>
+
+<a th:href="@{/orderline/new}" class="btn btn-add">Add New Order Line</a>
 
 <table>
     <thead>
     <tr>
         <th>ID</th>
-        <th>Menu Item ID</th>
+        <th>Order ID</th>
+        <th>Menu Item</th>
         <th>Quantity</th>
-        <th>Action</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="orderline : ${orderlines}">
-        <td th:text="${orderline.id}"></td>
-        <td th:text="${orderline.menuItemId}"></td>
-        <td th:text="${orderline.quantity}"></td>
+    <tr th:each="line : ${orderlines}">
+        <td th:text="${line.id}"></td>
+        <td th:text="${line.order != null ? line.order.id : 'N/A'}"></td>
+        <td th:text="${line.menuItem != null ? line.menuItem.name : 'N/A'}"></td>
+        <td th:text="${line.quantity}"></td>
         <td>
-            <!-- Edit button -->
-            <a th:href="@{'/orderline/' + ${orderline.id} + '/edit'}">
-                <button type="button" class="edit-btn">Edit</button>
-            </a>
-            <!-- Delete button -->
-            <form th:action="@{'/orderline/' + ${orderline.id} + '/delete'}" method="post" style="display:inline;">
-                <button type="submit">Delete</button>
+            <a th:href="@{'/orderline/' + ${line.id} + '/edit'}" class="btn btn-edit">Edit</a>
+
+            <form th:action="@{'/orderline/' + ${line.id} + '/delete'}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-delete"
+                        onclick="return confirm('Delete this order line?');">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

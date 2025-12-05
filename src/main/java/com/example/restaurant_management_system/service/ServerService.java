@@ -19,8 +19,9 @@ public class ServerService {
         return serverRepository.findAll();
     }
 
-    public Server getServerById(String id) {
-        return serverRepository.findById(id);
+    // Change ID type to Long
+    public Server getServerById(Long id) {
+        return serverRepository.findById(id).orElse(null);
     }
 
     public void addServer(Server server) {
@@ -28,10 +29,12 @@ public class ServerService {
     }
 
     public void updateServer(Server server) {
-        serverRepository.update(server);
+        // JPA's save() handles both add and update
+        serverRepository.save(server);
     }
 
-    public void deleteServer(String id) {
-        serverRepository.delete(id);
+    // Change ID type to Long
+    public void deleteServer(Long id) {
+        serverRepository.deleteById(id);
     }
 }

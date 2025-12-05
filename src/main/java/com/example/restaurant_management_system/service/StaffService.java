@@ -19,8 +19,9 @@ public class StaffService {
         return staffRepository.findAll();
     }
 
-    public Staff getStaffById(String id) {
-        return staffRepository.findById(id);
+    // Change ID type from String to Long, and use JpaRepository.findById
+    public Staff getStaffById(Long id) {
+        return staffRepository.findById(id).orElse(null);
     }
 
     public void addStaff(Staff s) {
@@ -28,10 +29,12 @@ public class StaffService {
     }
 
     public void updateStaff(Staff s) {
-        staffRepository.update(s);
+        // JpaRepository.save() handles both insert and update
+        staffRepository.save(s);
     }
 
-    public void deleteStaff(String id) {
-        staffRepository.delete(id);
+    // Change ID type from String to Long, and use JpaRepository.deleteById
+    public void deleteStaff(Long id) {
+        staffRepository.deleteById(id);
     }
 }

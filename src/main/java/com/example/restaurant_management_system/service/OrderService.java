@@ -1,7 +1,6 @@
 package com.example.restaurant_management_system.service;
 
 import com.example.restaurant_management_system.model.Order;
-import com.example.restaurant_management_system.model.OrderAssignment;
 import com.example.restaurant_management_system.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,57 +10,36 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderAssignmentService assignmentService;
-    private final OrderLineService orderLineService;
+    // Remove dependencies on OrderAssignmentService and OrderLineService
+    // for simple loading, as JPA handles it. You might keep them for business logic.
 
-    public OrderService(OrderRepository orderRepository, OrderAssignmentService assignmentService, OrderLineService orderLineService) {
+    public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.assignmentService = assignmentService;
-        this.orderLineService = orderLineService;
     }
 
     public List<Order> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
-        for (Order order : orders) {
-            loadAssignments(order); // existing
-            loadOrderLines(order); // new
-        }
-        return orders;
+        // JPA loads relationships (if configured with FetchType.EAGER or accessed later)
+        return orderRepository.findAll();
     }
 
-    public Order getOrderById(String id) {
-        Order order = orderRepository.findById(id);
-        loadAssignments(order);
-        loadOrderLines(order);
-        return order;
+    public Order getOrderById(Long id) { // Change ID type to Long
+        // JPA handles loading assignments/orderLines automatically now
+        return orderRepository.findById(id).orElse(null);
     }
 
     public void addOrder(Order order) {
         orderRepository.save(order);
     }
 
-    public void updateOrder(Order order) {orderRepository.save(order);}
-
-    public void deleteOrder(String id) {
-        orderRepository.delete(id);
+    public void updateOrder(Order order) {
+        orderRepository.save(order);
     }
 
-    private void loadAssignments(Order order) {
-        List<OrderAssignment> assignments = assignmentService.getAllAssignments()
-                .stream()
-                .filter(a -> a.getOrderId().equals(order.getId()))
-                .toList();
-
-        order.setAssignments(assignments);
-
+    public void deleteOrder(Long id) { // Change ID type to Long
+        orderRepository.deleteById(id);
     }
 
-
-    private void loadOrderLines(Order order) {
-        order.setOrderLines(orderLineService.getAllOrderLines().stream()
-                .filter(line -> order.getId().equals(line.getOrderId()))
-                .toList());
-    }
-
-
+    // REMOVE these methods as they are now handled by JPA entity relationships:
+    // private void loadAssignments(Order order) { ... }
+    // private void loadOrderLines(Order order) { ... }
 }

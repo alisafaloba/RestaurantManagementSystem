@@ -19,8 +19,8 @@ public class OrderLineService {
         return orderLineRepository.findAll();
     }
 
-    public OrderLine getOrderLineById(String id) {
-        return orderLineRepository.findById(id);
+    public OrderLine getOrderLineById(Long id) { // Changed type to Long
+        return orderLineRepository.findById(id).orElse(null); // Use JpaRepository method
     }
 
     public void addOrderLine(OrderLine line) {
@@ -28,16 +28,14 @@ public class OrderLineService {
     }
 
     public void updateOrderLine(OrderLine line) {
-        orderLineRepository.update(line);
+        // JpaRepository.save() handles both insert and update
+        orderLineRepository.save(line);
     }
 
-    public void deleteOrderLine(String id) {
-        orderLineRepository.delete(id);
-    }
-    public List<OrderLine> getOrderLinesByOrderId(String orderId) {
-        return orderLineRepository.findAll().stream()
-                .filter(line -> orderId.equals(line.getOrderId()))
-                .toList();
+    public void deleteOrderLine(Long id) { // Changed type to Long
+        orderLineRepository.deleteById(id);
     }
 
+    // REMOVED: getOrderLinesByOrderId is now obsolete as JPA handles the relationship
+    // via the Order entity (Order.getOrderLines())
 }

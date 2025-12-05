@@ -42,6 +42,11 @@
             font-size: 14px;
         }
 
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -78,25 +83,51 @@
 <form th:action="${order.id == null} ? @{/order} : @{'/order/' + ${order.id} + '/update'}"
       th:object="${order}" method="post">
 
-    <!-- Customer -->
     <div>
-        <label for="customerId">Customer ID</label>
-        <input id="customerId" th:field="*{customerId}" placeholder="Enter customer ID" required>
+        <label for="customer">Customer</label>
+        <select id="customer" name="customerId" required>
+            <option value="">-- Select Customer --</option>
+            <option th:each="cust : ${customers}"
+                    th:value="${cust.id}"
+                    th:text="${cust.name} + ' (' + ${cust.emailaddress} + ')'"
+                    th:selected="${order.customer != null and order.customer.id == cust.id}">
+            </option>
+        </select>
+        <div th:if="${#fields.hasErrors('customer')}" class="error"
+             th:errors="*{customer}">Customer is required</div>
     </div>
 
-    <!-- Table -->
     <div>
-        <label for="tableId">Table ID</label>
-        <input id="tableId" th:field="*{tableId}" placeholder="Enter table number" required>
+        <label for="table">Table Number</label>
+        <select id="table" name="tableId" required>
+            <option value="">-- Select Table --</option>
+            <option th:each="t : ${tables}"
+                    th:value="${t.id}"
+                    th:text="'Table ' + ${t.number}"
+                    th:selected="${order.table != null and order.table.id == t.id}">
+            </option>
+        </select>
+        <div th:if="${#fields.hasErrors('table')}" class="error"
+             th:errors="*{table}">Table is required</div>
     </div>
 
-    <!-- Status -->
     <div>
         <label for="status">Order Status</label>
         <select id="status" th:field="*{status}">
             <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
         </select>
+        <div th:if="${#fields.hasErrors('status')}" class="error"
+             th:errors="*{status}"></div>
     </div>
+
+    <div>
+        <label for="date">Order Date</label>
+        <input type="datetime-local" id="date" th:field="*{date}" required>
+        <div th:if="${#fields.hasErrors('date')}" class="error"
+             th:errors="*{date}"></div>
+    </div>
+
+
 
     <button type="submit" th:text="${order.id == null} ? 'Save Order' : 'Update Order'"></button>
 </form>

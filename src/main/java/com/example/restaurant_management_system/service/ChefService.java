@@ -19,8 +19,9 @@ public class ChefService {
         return chefRepository.findAll();
     }
 
-    public Chef getChefById(String id) {
-        return chefRepository.findById(id);
+    // Change ID type to Long and use JPA's findById
+    public Chef getChefById(Long id) {
+        return chefRepository.findById(id).orElse(null);
     }
 
     public void addChef(Chef chef) {
@@ -28,10 +29,12 @@ public class ChefService {
     }
 
     public void updateChef(Chef chef) {
-        chefRepository.update(chef);
+        // JPA's save() handles both add and update
+        chefRepository.save(chef);
     }
 
-    public void deleteChef(String id) {
-        chefRepository.delete(id);
+    // Change ID type to Long and use JPA's deleteById
+    public void deleteChef(Long id) {
+        chefRepository.deleteById(id);
     }
 }

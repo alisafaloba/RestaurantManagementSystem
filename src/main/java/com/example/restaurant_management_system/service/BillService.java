@@ -19,8 +19,8 @@ public class BillService {
         return billRepository.findAll();
     }
 
-    public Bill getBillById(String id) {
-        return billRepository.findById(id);
+    public Bill getBillById(Long id) {
+        return billRepository.findById(id).orElse(null);
     }
 
     public void addBill(Bill bill) {
@@ -28,10 +28,10 @@ public class BillService {
     }
 
     public void updateBill(Bill bill) {
-        billRepository.update(bill);
+        billRepository.save(bill);
     }
 
-    public void deleteBill(String id) {
-        billRepository.delete(id);
+    public void deleteBill(Long id) {
+        billRepository.deleteById(id);
     }
 }

@@ -19,8 +19,9 @@ public class MenuItemService {
         return menuItemRepository.findAll();
     }
 
-    public MenuItem getMenuItemById(String id) {
-        return menuItemRepository.findById(id);
+    // Change ID type from String to Long, and use JpaRepository.findById
+    public MenuItem getMenuItemById(Long id) {
+        return menuItemRepository.findById(id).orElse(null);
     }
 
     public void addMenuItem(MenuItem item) {
@@ -28,10 +29,12 @@ public class MenuItemService {
     }
 
     public void updateMenuItem(MenuItem item) {
-        menuItemRepository.update(item);
+        // JpaRepository.save() handles both insert and update
+        menuItemRepository.save(item);
     }
 
-    public void deleteMenuItem(String id) {
-        menuItemRepository.delete(id);
+    // Change ID type from String to Long, and use JpaRepository.deleteById
+    public void deleteMenuItem(Long id) {
+        menuItemRepository.deleteById(id);
     }
 }

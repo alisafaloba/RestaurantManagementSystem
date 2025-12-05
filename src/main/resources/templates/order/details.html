@@ -21,8 +21,13 @@
 
 <div class="box">
     <p><label>Order ID:</label> <span th:text="${order.id}"></span></p>
-    <p><label>Customer ID:</label> <span th:text="${order.customerId}"></span></p>
-    <p><label>Table ID:</label> <span th:text="${order.tableId}"></span></p>
+
+    <p><label>Customer:</label>
+        <span th:text="${order.customer.name} + ' (' + ${order.customer.emailaddress} + ')'"></span>
+    </p>
+
+    <p><label>Table Number:</label> <span th:text="${order.table.number}"></span></p>
+
     <p><label>Status:</label> <span th:text="${order.status}"></span></p>
     <p><label>Date:</label> <span th:text="${#dates.format(order.date, 'yyyy-MM-dd HH:mm')}"></span></p>
 </div>
@@ -32,7 +37,6 @@
 <a th:href="@{/order}">Back to Orders</a>
 <h2>Assignments</h2>
 
-<!-- Button to create assignment for this order -->
 <a th:href="@{'/orderassignment/new?orderId=' + ${order.id}}">
     <button style="background:#5bc0de;color:white;border:none;padding:6px 10px;cursor:pointer;">
         Add Assignment
@@ -45,18 +49,17 @@
     <thead>
     <tr>
         <th style="border:1px solid #ccc;padding:8px;">Assignment ID</th>
-        <th style="border:1px solid #ccc;padding:8px;">Staff ID</th>
+        <th style="border:1px solid #ccc;padding:8px;">Staff ID/Name</th>
     </tr>
     </thead>
 
     <tbody>
     <tr th:each="a : ${order.assignments}">
         <td style="border:1px solid #ccc;padding:8px;" th:text="${a.id}"></td>
-        <td style="border:1px solid #ccc;padding:8px;" th:text="${a.staffId}"></td>
+        <td style="border:1px solid #ccc;padding:8px;" th:text="${a.staff.id}"></td>
     </tr>
 
-    <!-- No assignments -->
-    <tr th:if="${order.assignments.size() == 0}">
+    <tr th:if="${#lists.isEmpty(order.assignments)}">
         <td colspan="2" style="text-align:center;padding:10px;">No assignments yet.</td>
     </tr>
     </tbody>
@@ -64,7 +67,6 @@
 
 <h2>Order Lines</h2>
 
-<!-- Button to add a new order line -->
 <a th:href="@{'/orderline/new?orderId=' + ${order.id}}">
     <button style="background:#5cb85c;color:white;border:none;padding:6px 10px;cursor:pointer;">
         Add Order Line
@@ -77,7 +79,7 @@
     <thead>
     <tr>
         <th style="border:1px solid #ccc;padding:8px;">Order Line ID</th>
-        <th style="border:1px solid #ccc;padding:8px;">Menu Item ID</th>
+        <th style="border:1px solid #ccc;padding:8px;">Menu Item ID/Name</th>
         <th style="border:1px solid #ccc;padding:8px;">Quantity</th>
         <th style="border:1px solid #ccc;padding:8px;">Price</th>
     </tr>
@@ -87,14 +89,13 @@
 
     <tr th:each="l : ${order.orderLines}">
         <td style="border:1px solid #ccc;padding:8px;" th:text="${l.id}"></td>
-        <td style="border:1px solid #ccc;padding:8px;" th:text="${l.menuItemId}"></td>
+        <td style="border:1px solid #ccc;padding:8px;" th:text="${l.menuItem.id}"></td>
         <td style="border:1px solid #ccc;padding:8px;" th:text="${l.quantity}"></td>
-        <td style="border:1px solid #ccc;padding:8px;">-</td>
+        <td style="border:1px solid #ccc;padding:8px;" th:text="${l.menuItem.price}"></td>
     </tr>
 
 
-    <!-- If no order lines -->
-    <tr th:if="${order.orderLines.size() == 0}">
+    <tr th:if="${#lists.isEmpty(order.orderLines)}">
         <td colspan="4" style="text-align:center;padding:10px;">No order lines yet.</td>
     </tr>
 

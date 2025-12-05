@@ -19,8 +19,9 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public Customer getCustomerById(String id) {
-        return customerRepository.findById(id);
+    // Change ID type from String to Long, and use JpaRepository.findById
+    public Customer getCustomerById(Long id) {
+        return customerRepository.findById(id).orElse(null);
     }
 
     public void addCustomer(Customer customer) {
@@ -28,10 +29,12 @@ public class CustomerService {
     }
 
     public void updateCustomer(Customer customer) {
-        customerRepository.update(customer);
+        // JpaRepository.save() handles both insert and update
+        customerRepository.save(customer);
     }
 
-    public void deleteCustomer(String id) {
-        customerRepository.delete(id);
+    // Change ID type from String to Long, and use JpaRepository.deleteById
+    public void deleteCustomer(Long id) {
+        customerRepository.deleteById(id);
     }
 }

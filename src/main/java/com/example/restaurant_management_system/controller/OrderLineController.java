@@ -1,19 +1,32 @@
 package com.example.restaurant_management_system.controller;
 
 import com.example.restaurant_management_system.model.OrderLine;
+import com.example.restaurant_management_system.service.MenuItemService;
 import com.example.restaurant_management_system.service.OrderLineService;
+import com.example.restaurant_management_system.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/orderline")
 public class OrderLineController {
 
     private final OrderLineService orderLineService;
+    private final OrderService orderService;
+    private final MenuItemService menuItemService;
 
-    public OrderLineController(OrderLineService orderLineService) {
+    public OrderLineController(
+            OrderLineService orderLineService,
+            OrderService orderService,
+            MenuItemService menuItemService
+    ) {
         this.orderLineService = orderLineService;
+        this.orderService = orderService;
+        this.menuItemService = menuItemService;
     }
 
     @GetMapping
@@ -22,71 +35,91 @@ public class OrderLineController {
         return "orderLine/index";
     }
 
-    //@GetMapping("/new")
-    //public String showCreateForm(Model model) {
-       // model.addAttribute("orderline", new OrderLine());
-       // return "orderline/form";
-    //}
+    @GetMapping("/new")
+    public String showCreateForm(@RequestParam(value = "orderId", required = false) Long orderId,
+                                 Model model) {
+        OrderLine line = new OrderLine();
+        model.addAttribute("orderline", line);
+
+        // dropdown data
+        model.addAttribute("orders", orderService.getAllOrders());
+        model.addAttribute("menuItems", menuItemService.getAllMenuItems());
+
+        // optional: preselect an order if passed as request param
+        model.addAttribute("preselectedOrderId", orderId);
+
+        return "orderLine/form";
+    }
 
     @PostMapping
-    public String createOrderLine(@ModelAttribute("orderline") OrderLine orderLine) {
+    public String createOrderLine(@Valid @ModelAttribute("orderline") OrderLine orderLine,
+                                  BindingResult bindingResult,
+                                  Model model) {
 
-        if (orderLine.getId() == null || orderLine.getId().isEmpty()) {
-            orderLine.setId(java.util.UUID.randomUUID().toString());
+        if (bindingResult.hasErrors()) {
+            // re-add dropdowns before returning form
+            model.addAttribute("orders", orderService.getAllOrders());
+            model.addAttribute("menuItems", menuItemService.getAllMenuItems());
+            return "orderLine/form";
         }
 
         orderLineService.addOrderLine(orderLine);
 
-        // if created *from an order*, go back to that order’s details
-        if (orderLine.getOrderId() != null) {
-            return "redirect:/order/" + orderLine.getOrderId() + "/details";
+        if (orderLine.getOrder() != null && orderLine.getOrder().getId() != null) {
+            return "redirect:/order/" + orderLine.getOrder().getId() + "/details";
         }
 
-        return "redirect:/orderline"; // fallback
+        return "redirect:/orderline";
     }
 
-
-
-
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-        OrderLine orderLine = orderLineService.getOrderLineById(id);
-        model.addAttribute("orderline", orderLine);
+    public String showEditForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        OrderLine line = orderLineService.getOrderLineById(id);
+        if (line == null) {
+            redirectAttributes.addFlashAttribute("error", "Order line not found");
+            return "redirect:/orderline";
+        }
+
+        model.addAttribute("orderline", line);
+        model.addAttribute("orders", orderService.getAllOrders());
+        model.addAttribute("menuItems", menuItemService.getAllMenuItems());
+
         return "orderLine/form";
     }
 
     @PostMapping("/{id}/update")
-    public String updateOrderLine(@PathVariable String id, @ModelAttribute("orderline") OrderLine orderLine) {
+    public String updateOrderLine(@PathVariable Long id,
+                                  @Valid @ModelAttribute("orderline") OrderLine orderLine,
+                                  BindingResult bindingResult,
+                                  Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("orders", orderService.getAllOrders());
+            model.addAttribute("menuItems", menuItemService.getAllMenuItems());
+            return "orderLine/form";
+        }
+
         orderLine.setId(id);
         orderLineService.updateOrderLine(orderLine);
+
         return "redirect:/orderline";
     }
 
-    @GetMapping("/new")
-    public String showCreateForm(@RequestParam(value = "orderId", required = false) String orderId,
-                                 Model model) {
-
-        OrderLine line = new OrderLine();
-        line.setOrderId(orderId); // prefill like assignment controller
-
-        model.addAttribute("orderline", line);
-        return "orderLine/form";
-    }
-
     @PostMapping("/{id}/delete")
-    public String deleteOrderLine(@PathVariable String id) {
+    public String deleteOrderLine(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        var line = orderLineService.getOrderLineById(id);
+        Long orderId = (line != null && line.getOrder() != null) ? line.getOrder().getId() : null;
 
-        OrderLine line = orderLineService.getOrderLineById(id);
-        String orderId = (line != null) ? line.getOrderId() : null;
-
-        orderLineService.deleteOrderLine(id);
+        try {
+            orderLineService.deleteOrderLine(id);
+            redirectAttributes.addFlashAttribute("success", "Order line deleted");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete order line");
+        }
 
         if (orderId != null) {
             return "redirect:/order/" + orderId + "/details";
         }
-
         return "redirect:/orderline";
     }
-
-
 }
