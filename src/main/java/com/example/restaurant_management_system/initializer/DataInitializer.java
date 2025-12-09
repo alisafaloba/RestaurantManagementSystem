@@ -21,6 +21,7 @@ public class DataInitializer implements CommandLineRunner {
     private final OrderRepository orderRepository;
     private final OrderLineRepository orderLineRepository;
     private final StaffRepository staffRepository;
+    private final ServerRepository serverRepository;
     private final ChefRepository chefRepository;
     private final MenuItemRepository menuItemRepository;
     private final OrderAssignmentRepository orderAssignmentRepository;
@@ -31,7 +32,7 @@ public class DataInitializer implements CommandLineRunner {
                            CustomerRepository customerRepository,
                            OrderRepository orderRepository,
                            OrderLineRepository orderLineRepository,
-                           StaffRepository staffRepository,
+                           StaffRepository staffRepository, ServerRepository serverRepository,
                            ChefRepository chefRepository,
                            MenuItemRepository menuItemRepository, OrderAssignmentRepository orderAssignmentRepository) {
         this.tableRepository = tableRepository;
@@ -40,6 +41,7 @@ public class DataInitializer implements CommandLineRunner {
         this.orderRepository = orderRepository;
         this.orderLineRepository = orderLineRepository;
         this.staffRepository = staffRepository;
+        this.serverRepository = serverRepository;
         this.chefRepository = chefRepository;
         this.menuItemRepository = menuItemRepository;
         this.orderAssignmentRepository = orderAssignmentRepository;
@@ -154,25 +156,12 @@ public class DataInitializer implements CommandLineRunner {
         }
 
 
-// ----------------------- Staff / Servers
-        if (staffRepository.count() == 0) {
-            // Chefs
-            List<Chef> chefs = List.of(
-                    new Chef("Gordon Ramsay", "Italian Cuisine"),
-                    new Chef("Jamie Oliver", "British Cuisine"),
-                    new Chef("Alice Smith", "Pastry"),
-                    new Chef("Bob Johnson", "Grill"),
-                    new Chef("Charlie Brown", "Seafood"),
-                    new Chef("David White", "Vegetarian"),
-                    new Chef("Eva Green", "Sushi"),
-                    new Chef("Frank Black", "Desserts"),
-                    new Chef("Grace Lee", "BBQ"),
-                    new Chef("Hannah Davis", "Vegan")
-            );
-            chefRepository.saveAll(chefs);
+// ----------------------- Staff (Chefs + Servers)
+        if (serverRepository.count() == 0) {
+
 
             // Servers
-            List<Server> servers = List.of(
+            List<Staff> servers = List.of(
                     new Server("Liam", "Waiter"),
                     new Server("Olivia", "Waitress"),
                     new Server("Noah", "Waiter"),
@@ -186,6 +175,27 @@ public class DataInitializer implements CommandLineRunner {
             );
             staffRepository.saveAll(servers);
         }
+
+            if (chefRepository.count() == 0) {
+
+            // Chefs
+            List<Staff> chefs = List.of(
+                    new Chef("Gordon Ramsay", "Italian Cuisine"),
+                    new Chef("Jamie Oliver", "British Cuisine"),
+                    new Chef("Alice Smith", "Pastry"),
+                    new Chef("Bob Johnson", "Grill"),
+                    new Chef("Charlie Brown", "Seafood"),
+                    new Chef("David White", "Vegetarian"),
+                    new Chef("Eva Green", "Sushi"),
+                    new Chef("Frank Black", "Desserts"),
+                    new Chef("Grace Lee", "BBQ"),
+                    new Chef("Hannah Davis", "Vegan")
+            );
+            staffRepository.saveAll(chefs);
+
+
+        }
+
 
 
 // ----------------------- OrderAssignments
