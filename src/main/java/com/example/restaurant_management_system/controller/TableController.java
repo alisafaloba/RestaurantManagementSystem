@@ -1,12 +1,18 @@
 package com.example.restaurant_management_system.controller;
 
+import com.example.restaurant_management_system.model.Order;
 import com.example.restaurant_management_system.model.Table;
+import com.example.restaurant_management_system.repository.CrudRepository;
+import com.example.restaurant_management_system.repository.OrderRepository;
+import com.example.restaurant_management_system.repository.TableRepository;
 import com.example.restaurant_management_system.service.TableService;
 import jakarta.validation.Valid; // <-- ADD VALIDATION IMPORT
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult; // <-- ADD VALIDATION IMPORT
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 // Removed java.util.UUID import
 
 @Controller
@@ -14,9 +20,14 @@ import org.springframework.web.bind.annotation.*;
 public class TableController {
 
     private final TableService tableService;
+    private final TableRepository tableRepository;
+    private final OrderRepository orderRepository;
 
-    public TableController(TableService tableService) {
+
+    public TableController(TableService tableService, TableRepository tableRepository, OrderRepository orderRepository) {
         this.tableService = tableService;
+        this.tableRepository = tableRepository;
+        this.orderRepository = orderRepository;
     }
 
     @GetMapping
@@ -75,17 +86,36 @@ public class TableController {
         return "redirect:/table";
     }
 
-    //@GetMapping
-    @GetMapping("/{id}/details")
-    public String showEntityDetails(@PathVariable Long id, Model model) {
-        Table table = tableService.getTableById(id);
 
-        if (table == null) {
-            return "redirect:/table";
-        }
+
+
+
+//    @GetMapping("/{id}/details")
+//    public String showEntityDetails(@PathVariable Long id, Model model) {
+//        Table table = tableService.getTableById(id);
+//
+//        if (table == null) {
+//            return "redirect:/table";
+//        }
+//
+//        model.addAttribute("table", table);
+//        model.addAttribute("orders", table.getOrders());
+//        return "table/details";
+//    }
+
+    @GetMapping("/{id}/details")
+    public String getTableDetails(@PathVariable Long id, Model model) {
+
+        Table table = tableRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Table not found"));
+
+        List<Order> orders = orderRepository.findByTable_Id(id);
 
         model.addAttribute("table", table);
-        model.addAttribute("orders", table.getOrders());
+        model.addAttribute("orders", orders);
+        model.addAttribute("totalOrders", orders.size());
+
         return "table/details";
     }
+
 }

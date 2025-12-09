@@ -97,4 +97,18 @@ public class Order {
 
     public LocalDateTime getDate() { return date; }
     public void setDate(LocalDateTime date) { this.date = date; }
+
+
+
+    //pentru detaliile de la table
+    public Double getTotalPrice() {
+        if (orderLines == null || orderLines.isEmpty()) return 0.0;
+        return orderLines.stream()
+                .mapToDouble(line -> line.getQuantity() * line.getMenuItem().getPrice())
+                .sum();
+    }
+
+
+
+
 }

@@ -37,10 +37,22 @@
     </thead>
 
     <tbody>
+
+    <!-- Lista de orders -->
     <tr th:each="order : ${orders}">
         <td th:text="${order.id}"></td>
+
+        <!-- Dacă Order are getTotalPrice() -->
+        <td th:text="${order.totalPrice}"></td>
+
         <td th:text="${order.status}"></td>
     </tr>
+
+    <!-- Dacă nu există comenzi -->
+    <tr th:if="${#lists.isEmpty(orders)}">
+        <td colspan="3">No orders for this table.</td>
+    </tr>
+
     </tbody>
 </table>
 

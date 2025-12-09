@@ -101,13 +101,11 @@
         <thead>
         <tr>
             <th>Employee</th>
-            <th>Role</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="a : ${order.assignments}">
-            <td th:text="${a.employee.name}"></td>
-            <td th:text="${a.role}"></td>
+            <td th:text="${a.staff.name}"></td>
         </tr>
         </tbody>
     </table>
