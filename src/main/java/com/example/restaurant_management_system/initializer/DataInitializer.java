@@ -23,6 +23,8 @@ public class DataInitializer implements CommandLineRunner {
     private final StaffRepository staffRepository;
     private final ChefRepository chefRepository;
     private final MenuItemRepository menuItemRepository;
+    private final OrderAssignmentRepository orderAssignmentRepository;
+
 
     public DataInitializer(TableRepository tableRepository,
                            BillRepository billRepository,
@@ -31,7 +33,7 @@ public class DataInitializer implements CommandLineRunner {
                            OrderLineRepository orderLineRepository,
                            StaffRepository staffRepository,
                            ChefRepository chefRepository,
-                           MenuItemRepository menuItemRepository) {
+                           MenuItemRepository menuItemRepository, OrderAssignmentRepository orderAssignmentRepository) {
         this.tableRepository = tableRepository;
         this.billRepository = billRepository;
         this.customerRepository = customerRepository;
@@ -40,6 +42,7 @@ public class DataInitializer implements CommandLineRunner {
         this.staffRepository = staffRepository;
         this.chefRepository = chefRepository;
         this.menuItemRepository = menuItemRepository;
+        this.orderAssignmentRepository = orderAssignmentRepository;
     }
 
     @Override
@@ -185,6 +188,23 @@ public class DataInitializer implements CommandLineRunner {
         }
 
 
+// ----------------------- OrderAssignments
+        if (orderAssignmentRepository.count() == 0) {
+            List<Order> orders = orderRepository.findAll();
+            List<Staff> staffList = staffRepository.findAll();
+            List<OrderAssignment> assignments = new ArrayList<>();
+
+            // Creează 10 assignment-uri
+            for (int i = 0; i < 10; i++) {
+                Order order = orders.get(i % orders.size()); // dacă sunt mai puține comenzi
+                Staff staff = staffList.get(i % staffList.size()); // alege staff ciclic
+
+                OrderAssignment assignment = new OrderAssignment(order, staff);
+                assignments.add(assignment);
+            }
+
+            orderAssignmentRepository.saveAll(assignments);
+        }
 
 
 
