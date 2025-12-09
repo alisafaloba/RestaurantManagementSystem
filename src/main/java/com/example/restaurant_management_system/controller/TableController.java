@@ -74,4 +74,18 @@ public class TableController {
         tableService.updateTable(table);
         return "redirect:/table";
     }
+
+    //@GetMapping
+    @GetMapping("/{id}/details")
+    public String showEntityDetails(@PathVariable Long id, Model model) {
+        Table table = tableService.getTableById(id);
+
+        if (table == null) {
+            return "redirect:/table";
+        }
+
+        model.addAttribute("table", table);
+        model.addAttribute("orders", table.getOrders());
+        return "table/details";
+    }
 }

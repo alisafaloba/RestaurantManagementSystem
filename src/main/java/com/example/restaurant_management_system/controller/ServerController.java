@@ -1,6 +1,7 @@
 package com.example.restaurant_management_system.controller;
 
 import com.example.restaurant_management_system.model.Server;
+import com.example.restaurant_management_system.model.Table;
 import com.example.restaurant_management_system.service.ServerService;
 import jakarta.validation.Valid; // Required for validation
 import org.springframework.stereotype.Controller;
@@ -76,4 +77,5 @@ public class ServerController {
         serverService.updateServer(server);
         return "redirect:/server";
     }
+
 }

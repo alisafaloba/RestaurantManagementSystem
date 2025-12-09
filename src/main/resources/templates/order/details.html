@@ -3,105 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <title>Order Details</title>
+
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; }
-        .box {
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 8px;
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; }
+        h1 { text-align: center; margin-bottom: 20px; }
+
+        .section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fafafa;
         }
-        label { font-weight: bold; }
-        a { color: #0275d8; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            display: block;
+            margin-top: 25px;
+            text-align: center;
+            background: #0275d8;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: #025aa5;
+        }
     </style>
 </head>
+
 <body>
 
 <h1>Order Details</h1>
 
-<div class="box">
-    <p><label>Order ID:</label> <span th:text="${order.id}"></span></p>
-
-    <p><label>Customer:</label>
-        <span th:text="${order.customer.name} + ' (' + ${order.customer.emailaddress} + ')'"></span>
-    </p>
-
-    <p><label>Table Number:</label> <span th:text="${order.table.number}"></span></p>
-
-    <p><label>Status:</label> <span th:text="${order.status}"></span></p>
-    <p><label>Date:</label> <span th:text="${#dates.format(order.date, 'yyyy-MM-dd HH:mm')}"></span></p>
+<div class="section">
+    <h3>Basic Information</h3>
+    <p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
+    <p><strong>Status:</strong> <span th:text="${order.status}"></span></p>
+    <p><strong>Date:</strong> <span th:text="${#temporals.format(order.date, 'yyyy-MM-dd HH:mm')}"></span></p>
 </div>
 
-<br>
+<div class="section">
+    <h3>Customer Information</h3>
+    <p><strong>Name:</strong> <span th:text="${order.customer.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${order.customer.emailaddress}"></span></p>
+</div>
 
-<a th:href="@{/order}">Back to Orders</a>
-<h2>Assignments</h2>
+<div class="section">
+    <h3>Table Information</h3>
+    <p><strong>Table Number:</strong> <span th:text="${order.table.number}"></span></p>
+</div>
 
-<a th:href="@{'/orderassignment/new?orderId=' + ${order.id}}">
-    <button style="background:#5bc0de;color:white;border:none;padding:6px 10px;cursor:pointer;">
-        Add Assignment
-    </button>
-</a>
+<div class="section">
+    <h3>Order Lines</h3>
+    <table th:if="${order.orderLines != null and !order.orderLines.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Menu Item</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="line : ${order.orderLines}">
+            <td th:text="${line.menuItem.name}"></td>
+            <td th:text="${line.quantity}"></td>
+        </tr>
+        </tbody>
+    </table>
 
-<br><br>
-
-<table style="width:100%;border-collapse: collapse;">
-    <thead>
-    <tr>
-        <th style="border:1px solid #ccc;padding:8px;">Assignment ID</th>
-        <th style="border:1px solid #ccc;padding:8px;">Staff ID/Name</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr th:each="a : ${order.assignments}">
-        <td style="border:1px solid #ccc;padding:8px;" th:text="${a.id}"></td>
-        <td style="border:1px solid #ccc;padding:8px;" th:text="${a.staff.id}"></td>
-    </tr>
-
-    <tr th:if="${#lists.isEmpty(order.assignments)}">
-        <td colspan="2" style="text-align:center;padding:10px;">No assignments yet.</td>
-    </tr>
-    </tbody>
-</table>
-
-<h2>Order Lines</h2>
-
-<a th:href="@{'/orderline/new?orderId=' + ${order.id}}">
-    <button style="background:#5cb85c;color:white;border:none;padding:6px 10px;cursor:pointer;">
-        Add Order Line
-    </button>
-</a>
-
-<br><br>
-
-<table style="width:100%;border-collapse: collapse;">
-    <thead>
-    <tr>
-        <th style="border:1px solid #ccc;padding:8px;">Order Line ID</th>
-        <th style="border:1px solid #ccc;padding:8px;">Menu Item ID/Name</th>
-        <th style="border:1px solid #ccc;padding:8px;">Quantity</th>
-        <th style="border:1px solid #ccc;padding:8px;">Price</th>
-    </tr>
-    </thead>
-
-    <tbody>
-
-    <tr th:each="l : ${order.orderLines}">
-        <td style="border:1px solid #ccc;padding:8px;" th:text="${l.id}"></td>
-        <td style="border:1px solid #ccc;padding:8px;" th:text="${l.menuItem.id}"></td>
-        <td style="border:1px solid #ccc;padding:8px;" th:text="${l.quantity}"></td>
-        <td style="border:1px solid #ccc;padding:8px;" th:text="${l.menuItem.price}"></td>
-    </tr>
+    <p th:if="${order.orderLines == null || order.orderLines.isEmpty()}">
+        No order lines found.
+    </p>
+</div>
 
 
-    <tr th:if="${#lists.isEmpty(order.orderLines)}">
-        <td colspan="4" style="text-align:center;padding:10px;">No order lines yet.</td>
-    </tr>
+<div class="section">
+    <h3>Assignments</h3>
 
-    </tbody>
-</table>
+    <table th:if="${order.assignments != null and !order.assignments.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${order.assignments}">
+            <td th:text="${a.employee.name}"></td>
+            <td th:text="${a.role}"></td>
+        </tr>
+        </tbody>
+    </table>
 
+    <p th:if="${order.assignments == null || order.assignments.isEmpty()}">
+        No assignments found.
+    </p>
+</div>
+
+<a class="back-btn" th:href="@{/order}">← Back to Orders</a>
 
 </body>
 </html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Item Details</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 70%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Details for Menu Item</h1>
+
+<p><strong>ID:</strong> <span th:text="${menuItem.id}"></span></p>
+<p><strong>Name:</strong> <span th:text="${menuItem.name}"></span></p>
+<p><strong>Price:</strong> $<span th:text="${menuItem.price}"></span></p>
+
+<h2>Allergens</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Allergen</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="allergen : ${allergens}">
+        <td th:text="${allergen}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<a th:href="@{/menuitem}">Back to Menu Item List</a>
+
+</body>
+</html>

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class Order {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") // <-- FIX: Add 'T' separator
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull(message = "Date is required")
-    private Date date;
+    private LocalDateTime date;
 
 
     // ----------------------------------------------------
@@ -61,7 +62,7 @@ public class Order {
     public Order(Customer customer,
                  com.example.restaurant_management_system.model.Table table, // <-- Use the full path here
                  OrderStatus status,
-                 Date date) {
+                 LocalDateTime date) {
 
         this.customer = customer;
         this.table = table;
@@ -94,6 +95,6 @@ public class Order {
     public List<OrderAssignment> getAssignments() { return assignments; }
     public void setAssignments(List<OrderAssignment> assignments) { this.assignments = assignments; }
 
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
+    public LocalDateTime getDate() { return date; }
+    public void setDate(LocalDateTime date) { this.date = date; }
 }

@@ -75,6 +75,11 @@
             <form th:action="@{'/table/' + ${table.id} + '/delete'}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
+            <!-- Details button -->
+            <a th:href="@{'/table/' + ${table.id} + '/details'}">
+                <button type="button" class="edit-btn" style="background-color:#6f42c1;">Details</button>
+            </a>
+
         </td>
     </tr>
     </tbody>

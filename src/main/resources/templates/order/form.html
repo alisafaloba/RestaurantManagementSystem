@@ -62,16 +62,11 @@
         }
 
         .back-link {
+            text-align: center;
             display: block;
             margin-top: 20px;
-            text-align: center;
-            font-size: 15px;
             color: #007bff;
             text-decoration: none;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
@@ -83,22 +78,24 @@
 <form th:action="${order.id == null} ? @{/order} : @{'/order/' + ${order.id} + '/update'}"
       th:object="${order}" method="post">
 
+    <!-- Customer -->
     <div>
         <label for="customer">Customer</label>
         <select id="customer" name="customerId" required>
             <option value="">-- Select Customer --</option>
+
             <option th:each="cust : ${customers}"
                     th:value="${cust.id}"
-                    th:text="${cust.name} + ' (' + ${cust.emailaddress} + ')'"
+                    th:text="${cust.name}"
                     th:selected="${order.customer != null and order.customer.id == cust.id}">
             </option>
         </select>
-        <div th:if="${#fields.hasErrors('customer')}" class="error"
-             th:errors="*{customer}">Customer is required</div>
+        <div th:if="${#fields.hasErrors('customer')}" class="error" th:errors="*{customer}"></div>
     </div>
 
+    <!-- Table -->
     <div>
-        <label for="table">Table Number</label>
+        <label for="table">Table</label>
         <select id="table" name="tableId" required>
             <option value="">-- Select Table --</option>
             <option th:each="t : ${tables}"
@@ -107,27 +104,27 @@
                     th:selected="${order.table != null and order.table.id == t.id}">
             </option>
         </select>
-        <div th:if="${#fields.hasErrors('table')}" class="error"
-             th:errors="*{table}">Table is required</div>
+        <div th:if="${#fields.hasErrors('table')}" class="error" th:errors="*{table}"></div>
     </div>
 
+    <!-- Status -->
     <div>
-        <label for="status">Order Status</label>
+        <label for="status">Status</label>
         <select id="status" th:field="*{status}">
-            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+            <option th:each="s : ${statuses}" th:text="${s}" th:value="${s}"></option>
         </select>
-        <div th:if="${#fields.hasErrors('status')}" class="error"
-             th:errors="*{status}"></div>
+        <div th:if="${#fields.hasErrors('status')}" class="error" th:errors="*{status}"></div>
     </div>
 
+    <!-- Date -->
     <div>
         <label for="date">Order Date</label>
-        <input type="datetime-local" id="date" th:field="*{date}" required>
-        <div th:if="${#fields.hasErrors('date')}" class="error"
-             th:errors="*{date}"></div>
+        <input type="datetime-local" id="date"
+               th:value="${order.date != null ? #temporals.format(order.date, 'yyyy-MM-dd''T''HH:mm') : ''}"
+               name="date" required>
+
+        <div th:if="${#fields.hasErrors('date')}" class="error" th:errors="*{date}"></div>
     </div>
-
-
 
     <button type="submit" th:text="${order.id == null} ? 'Save Order' : 'Update Order'"></button>
 </form>

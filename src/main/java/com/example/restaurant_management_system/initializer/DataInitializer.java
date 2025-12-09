@@ -116,9 +116,8 @@ public class DataInitializer implements CommandLineRunner {
                 order.setTable(tables.get(i));
                 order.setStatus(OrderStatus.OPEN);
 
-                // Convert LocalDateTime to java.util.Date
-                LocalDateTime localDateTime = LocalDateTime.now().minusDays(i);
-                Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                // Folosim direct LocalDateTime deoarece Order.date este LocalDateTime
+                LocalDateTime date = LocalDateTime.now().minusDays(i);
                 order.setDate(date);
 
                 orders.add(order);
@@ -150,6 +149,45 @@ public class DataInitializer implements CommandLineRunner {
                 billRepository.save(bill);
             }
         }
+
+
+// ----------------------- Staff / Servers
+        if (staffRepository.count() == 0) {
+            // Chefs
+            List<Chef> chefs = List.of(
+                    new Chef("Gordon Ramsay", "Italian Cuisine"),
+                    new Chef("Jamie Oliver", "British Cuisine"),
+                    new Chef("Alice Smith", "Pastry"),
+                    new Chef("Bob Johnson", "Grill"),
+                    new Chef("Charlie Brown", "Seafood"),
+                    new Chef("David White", "Vegetarian"),
+                    new Chef("Eva Green", "Sushi"),
+                    new Chef("Frank Black", "Desserts"),
+                    new Chef("Grace Lee", "BBQ"),
+                    new Chef("Hannah Davis", "Vegan")
+            );
+            chefRepository.saveAll(chefs);
+
+            // Servers
+            List<Server> servers = List.of(
+                    new Server("Liam", "Waiter"),
+                    new Server("Olivia", "Waitress"),
+                    new Server("Noah", "Waiter"),
+                    new Server("Emma", "Waitress"),
+                    new Server("Ava", "Waitress"),
+                    new Server("William", "Waiter"),
+                    new Server("Sophia", "Waitress"),
+                    new Server("James", "Waiter"),
+                    new Server("Isabella", "Waitress"),
+                    new Server("Benjamin", "Waiter")
+            );
+            staffRepository.saveAll(servers);
+        }
+
+
+
+
+
 
         System.out.println("✅ Database initialized with all entities and relationships!");
     }

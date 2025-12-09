@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Arrays;
 import org.springframework.validation.FieldError; // ADDED Import for manual validation
@@ -56,7 +57,7 @@ public class OrderController {
     public String showCreateForm(Model model) {
         Order order = new Order();
         order.setStatus(OrderStatus.OPEN);
-        order.setDate(new Date()); // Pre-fill date/time
+        order.setDate(LocalDateTime.now()); // Pre-fill date/time
 
         model.addAttribute("order", order);
         addFormAttributes(model); // Load customers, tables, statuses
@@ -219,6 +220,8 @@ public class OrderController {
     public String showOrderDetails(@PathVariable Long id, Model model) {
         Order order = orderService.getOrderById(id);
         model.addAttribute("order", order);
+        model.addAttribute("order lines", order.getOrderLines());
+        model.addAttribute("assignments", order.getAssignments());
         return "order/details";
     }
 }

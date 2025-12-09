@@ -3,23 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Order List</title>
+
     <style>
+        body { font-family: Arial, sans-serif; max-width: 750px; margin: 30px auto; }
+
         table {
             border-collapse: collapse;
-            width: 50%;
+            width: 100%;
+            margin-top: 20px;
         }
+
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 10px;
         }
-        th { background-color: #f2f2f2; }
+
+        th {
+            background-color: #f2f2f2;
+        }
 
         .btn {
-            padding: 5px 10px;
+            padding: 6px 12px;
+            border-radius: 5px;
+            color: white;
             border: none;
             cursor: pointer;
-            color: white;
+            text-decoration: none;
         }
+
         .details-btn { background-color: #0275d8; }
         .details-btn:hover { background-color: #025aa5; }
 
@@ -29,19 +40,32 @@
         .delete-btn { background-color: #d9534f; }
         .delete-btn:hover { background-color: #c9302c; }
 
-        a { text-decoration: none; }
+        .add-btn {
+            background-color: #5cb85c;
+            padding: 10px 15px;
+            display: inline-block;
+            margin-top: 5px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
+
 <body>
 
 <h1>Orders</h1>
 
-<a th:href="@{/order/new}">Add New Order</a>
+<a th:href="@{/order/new}" class="add-btn">Add New Order</a>
 
 <table>
     <thead>
     <tr>
-        <th>Order ID</th>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Table</th>
+        <th>Status</th>
+        <th>Date</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -49,19 +73,15 @@
     <tbody>
     <tr th:each="order : ${orders}">
         <td th:text="${order.id}"></td>
+        <td th:text="${order.customer.name}"></td>
+        <td th:text="${order.table.number}"></td>
+        <td th:text="${order.status}"></td>
+        <td th:text="${#temporals.format(order.date, 'yyyy-MM-dd HH:mm')}"></td>
 
         <td>
-            <!-- Details -->
-            <a th:href="@{'/order/' + ${order.id} + '/details'}">
-                <button type="button" class="btn details-btn">Details</button>
-            </a>
+            <a th:href="@{'/order/' + ${order.id} + '/details'}" class="btn details-btn">Details</a>
+            <a th:href="@{'/order/' + ${order.id} + '/edit'}" class="btn edit-btn">Edit</a>
 
-            <!-- Edit -->
-            <a th:href="@{'/order/' + ${order.id} + '/edit'}">
-                <button type="button" class="btn edit-btn">Edit</button>
-            </a>
-
-            <!-- Delete -->
             <form th:action="@{'/order/' + ${order.id} + '/delete'}"
                   method="post" style="display:inline;">
                 <button type="submit" class="btn delete-btn">Delete</button>

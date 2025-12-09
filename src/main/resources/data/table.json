@@ -1,14 +1,37 @@
 [ {
   "id" : "T1",
   "number" : 16,
-  "occupiedStatus" : "FREE",
-  "orders" : null
-}, {
+  "occupiedStatus" : "OCCUPIED",
+  "orders" :[
+
+  {
+    "id": "O1",
+    "customerId": "C101",
+    "tableId": "T",
+    "status": "OPEN",
+    "orderLines": [
+      { "id": "OL1", "menuItemId": "M10", "quantity": 2 },
+      { "id": "OL2", "menuItemId": "M3", "quantity": 1 }
+    ],
+    "assignments": [
+      { "id": "A1", "orderId": "O1", "staffId": "S11" }
+    ],
+    "date": "2024-05-01T12:30:00Z"
+  }
+  ]
+},
+
+
+
+  {
   "id" : "T2",
   "number" : 2,
-  "occupiedStatus" : "OCCUPIED",
-  "orders" : [ ]
-}, {
+  "occupiedStatus" : "FREE",
+  "orders" : []
+},
+
+
+  {
   "id" : "T3",
   "number" : 3,
   "occupiedStatus" : "FREE",

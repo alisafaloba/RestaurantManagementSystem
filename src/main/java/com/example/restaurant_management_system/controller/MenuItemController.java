@@ -1,6 +1,7 @@
 package com.example.restaurant_management_system.controller;
 
 import com.example.restaurant_management_system.model.MenuItem;
+import com.example.restaurant_management_system.model.Table;
 import com.example.restaurant_management_system.service.MenuItemService;
 import jakarta.validation.Valid; // <-- ADD VALIDATION IMPORT
 import org.springframework.stereotype.Controller;
@@ -76,4 +77,18 @@ public class MenuItemController {
         menuItemService.deleteMenuItem(id);
         return "redirect:/menuitem";
     }
+
+    @GetMapping("/{id}/details")
+    public String showEntityDetails(@PathVariable Long id, Model model) {
+        MenuItem menuItem = menuItemService.getMenuItemById(id);
+
+        if (menuItem == null) {
+            return "redirect:/menuitem";
+        }
+
+        model.addAttribute("menuItem", menuItem);
+        model.addAttribute("allergens", menuItem.getAllergens());
+        return "menuitem/details";
+    }
+
 }
