@@ -37,6 +37,7 @@
 
         /* Card container */
         .card-container {
+            /* Erhöhte Spaltenanzahl, um 8 Karten gut darzustellen */
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 30px;
@@ -83,6 +84,8 @@
     <a class="card" th:href="@{/menuitem}">Menu Items</a>
     <a class="card" th:href="@{/table}">Tables</a>
     <a class="card" th:href="@{/bill}">Bills</a>
+    <a class="card" th:href="@{/orderassignment}">Order Assignments</a>
+    <a class="card" th:href="@{/orderline}">Order Lines</a>
 </div>
 
 <footer>

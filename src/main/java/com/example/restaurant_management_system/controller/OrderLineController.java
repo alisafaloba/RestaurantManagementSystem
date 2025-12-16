@@ -29,9 +29,37 @@ public class OrderLineController {
         this.menuItemService = menuItemService;
     }
 
+    private void addFormAttributes(Model model) {
+        // Nutzt die parameterlosen Methoden, die alle Daten liefern
+        model.addAttribute("orders", orderService.getAllOrders());
+        model.addAttribute("menuItems", menuItemService.getAllMenuItems());
+    }
+
+    // GET /orderline → list all order lines with filtering and sorting (UPDATED)
     @GetMapping
-    public String listOrderLines(Model model) {
-        model.addAttribute("orderlines", orderLineService.getAllOrderLines());
+    public String listOrderLines(Model model,
+                                 // Sortier-Parameter
+                                 @RequestParam(defaultValue = "id") String sortField,
+                                 @RequestParam(defaultValue = "asc") String sortDir,
+                                 // Filter-Parameter (kombiniert)
+                                 @RequestParam(required = false) Long orderIdFilter,
+                                 @RequestParam(required = false) Long menuItemIdFilter,
+                                 @RequestParam(required = false) Double minQuantity) {
+
+        // Daten aus dem Service abrufen (gefiltert und sortiert)
+        model.addAttribute("orderlines",
+                orderLineService.getAllOrderLines(sortField, sortDir, orderIdFilter, menuItemIdFilter, minQuantity));
+
+        // Sortier-Infos für das UI
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        // Filter-Infos, um die Werte im Filterformular beizubehalten
+        model.addAttribute("orderIdFilter", orderIdFilter);
+        model.addAttribute("menuItemIdFilter", menuItemIdFilter);
+        model.addAttribute("minQuantity", minQuantity);
+
         return "orderLine/index";
     }
 
@@ -40,12 +68,8 @@ public class OrderLineController {
                                  Model model) {
         OrderLine line = new OrderLine();
         model.addAttribute("orderline", line);
+        addFormAttributes(model); // Load dropdown data
 
-        // dropdown data
-        model.addAttribute("orders", orderService.getAllOrders());
-        model.addAttribute("menuItems", menuItemService.getAllMenuItems());
-
-        // optional: preselect an order if passed as request param
         model.addAttribute("preselectedOrderId", orderId);
 
         return "orderLine/form";
@@ -57,9 +81,7 @@ public class OrderLineController {
                                   Model model) {
 
         if (bindingResult.hasErrors()) {
-            // re-add dropdowns before returning form
-            model.addAttribute("orders", orderService.getAllOrders());
-            model.addAttribute("menuItems", menuItemService.getAllMenuItems());
+            addFormAttributes(model);
             return "orderLine/form";
         }
 
@@ -81,8 +103,7 @@ public class OrderLineController {
         }
 
         model.addAttribute("orderline", line);
-        model.addAttribute("orders", orderService.getAllOrders());
-        model.addAttribute("menuItems", menuItemService.getAllMenuItems());
+        addFormAttributes(model); // Load dropdown data
 
         return "orderLine/form";
     }
@@ -94,8 +115,7 @@ public class OrderLineController {
                                   Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("orders", orderService.getAllOrders());
-            model.addAttribute("menuItems", menuItemService.getAllMenuItems());
+            addFormAttributes(model);
             return "orderLine/form";
         }
 
