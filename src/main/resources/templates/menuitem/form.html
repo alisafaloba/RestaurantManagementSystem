@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <title th:text="${menuItem.id != null} ? 'Edit Menu Item' : 'Add New Menu Item'">Menu Item Form</title>
     <style>
+        /* Einheitliches CSS */
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; }
         .form-container { max-width: 500px; margin: 20px 0; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="number"] { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        .btn { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;}
+        .btn { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; font-weight: bold;}
         .btn-primary { background-color: #007bff; color: white; }
         .btn-primary:hover { background-color: #0056b3; }
         .btn-secondary { background-color: #6c757d; color: white; }
         .btn-secondary:hover { background-color: #545b62; }
+        .error { color: red; font-size: 0.9em; margin-top: 2px; }
         .form-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .nav-link { margin-right: 15px; color: #007bff; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -21,16 +25,18 @@
 
 <div class="form-container">
     <form th:action="${menuItem.id != null} ? @{'/menuitem/' + ${menuItem.id} + '/update'} : @{/menuitem}"
-          method="post">
+          method="post" th:object="${menuItem}">
 
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" th:value="${menuItem.name}" required>
+            <input type="text" id="name" th:field="*{name}" required>
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error">Name Error</span>
         </div>
 
         <div class="form-group">
             <label for="price">Price:</label>
-            <input type="number" id="price" name="price" th:value="${menuItem.price}" step="0.01" min="0" required>
+            <input type="number" id="price" th:field="*{price}" step="0.01" min="0" required>
+            <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error">Price Error</span>
         </div>
 
         <div class="form-group">
@@ -44,9 +50,14 @@
             <button type="submit" class="btn btn-primary">
                 <span th:text="${menuItem.id != null} ? 'Update' : 'Create'">Save</span>
             </button>
-            <a th:href="@{/menuitem}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
+
+<div style="margin-top: 20px;">
+    <a th:href="@{/}" class="nav-link">Back to Home</a>
+    <a th:href="@{/menuitem}" class="nav-link">Back to Menu Item List</a>
+</div>
+
 </body>
 </html>

@@ -4,44 +4,16 @@
     <meta charset="UTF-8">
     <title th:text="${server.id} == null ? 'Create Server' : 'Edit Server'">Server Form</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 40px auto;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        label {
-            font-weight: bold;
-        }
-        input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        a {
-            display: inline-block;
-            margin-top: 12px;
-            text-decoration: none;
-            color: #007bff;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+        /* Einheitliches CSS */
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; }
+        form { display: flex; flex-direction: column; gap: 12px; }
+        label { font-weight: bold; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; width: 100%;}
+        .btn { background-color: #4CAF50; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 5px; font-weight: bold;}
+        .btn:hover { background-color: #45a049; }
+        .error { color: red; font-size: 0.9em; margin-top: 2px; }
+        .nav-links a { display: inline-block; margin-top: 12px; text-decoration: none; color: #007bff; margin-right: 15px;}
+        .nav-links a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -53,16 +25,26 @@
     <div>
         <label for="name">Name:</label>
         <input type="text" th:field="*{name}" id="name" required>
+        <span th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"
+              class="error">Name Error</span>
     </div>
 
     <div>
         <label for="designation">Designation:</label>
         <input type="text" th:field="*{designation}" id="designation" required>
+        <span th:if="${#fields.hasErrors('designation')}"
+              th:errors="*{designation}"
+              class="error">Designation Error</span>
     </div>
 
-    <button type="submit" th:text="${server.id} == null ? 'Save' : 'Update'"></button>
+    <button type="submit" class="btn" th:text="${server.id} == null ? 'Save' : 'Update'"></button>
 </form>
 
-<a th:href="@{/server}">Back to list</a>
+<div class="nav-links">
+    <a th:href="@{/}">Back to Home</a>
+    <a th:href="@{/server}">Back to Server List</a>
+</div>
+
 </body>
 </html>

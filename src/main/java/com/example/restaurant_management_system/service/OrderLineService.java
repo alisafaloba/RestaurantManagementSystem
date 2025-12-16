@@ -2,6 +2,7 @@ package com.example.restaurant_management_system.service;
 
 import com.example.restaurant_management_system.model.OrderLine;
 import com.example.restaurant_management_system.repository.OrderLineRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +16,27 @@ public class OrderLineService {
         this.orderLineRepository = orderLineRepository;
     }
 
-    public List<OrderLine> getAllOrderLines() {
-        return orderLineRepository.findAll();
+    /**
+     * Ruft alle Bestellzeilen ab, wendet Sortierung und Filterung an.
+     */
+    public List<OrderLine> getAllOrderLines(String sortField, String sortDir,
+                                            Long orderIdFilter, Long menuItemIdFilter, Double minQuantity) {
+
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
+
+        return orderLineRepository.findFilteredOrderLines(orderIdFilter, menuItemIdFilter, minQuantity, sort);
     }
 
-    public OrderLine getOrderLineById(Long id) { // Changed type to Long
-        return orderLineRepository.findById(id).orElse(null); // Use JpaRepository method
+    // Die parameterlose Methode leitet auf die neue Methode um
+    public List<OrderLine> getAllOrderLines() {
+        return getAllOrderLines("id", "asc", null, null, null);
+    }
+
+    // --- CRUD-Methoden ---
+
+    public OrderLine getOrderLineById(Long id) {
+        return orderLineRepository.findById(id).orElse(null);
     }
 
     public void addOrderLine(OrderLine line) {
@@ -28,14 +44,10 @@ public class OrderLineService {
     }
 
     public void updateOrderLine(OrderLine line) {
-        // JpaRepository.save() handles both insert and update
         orderLineRepository.save(line);
     }
 
-    public void deleteOrderLine(Long id) { // Changed type to Long
+    public void deleteOrderLine(Long id) {
         orderLineRepository.deleteById(id);
     }
-
-    // REMOVED: getOrderLinesByOrderId is now obsolete as JPA handles the relationship
-    // via the Order entity (Order.getOrderLines())
 }

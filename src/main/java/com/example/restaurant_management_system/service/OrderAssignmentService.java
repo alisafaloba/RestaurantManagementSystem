@@ -2,6 +2,7 @@ package com.example.restaurant_management_system.service;
 
 import com.example.restaurant_management_system.model.OrderAssignment;
 import com.example.restaurant_management_system.repository.OrderAssignmentRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +16,25 @@ public class OrderAssignmentService {
         this.assignmentRepository = assignmentRepository;
     }
 
-    public List<OrderAssignment> getAllAssignments() {
-        return assignmentRepository.findAll();
+    /**
+     * Ruft alle Zuordnungen ab, wendet Sortierung und Filterung an.
+     */
+    public List<OrderAssignment> getAllAssignments(String sortField, String sortDir,
+                                                   Long orderIdFilter, Long staffIdFilter) {
+
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
+
+        return assignmentRepository.findFilteredAssignments(orderIdFilter, staffIdFilter, sort);
     }
 
-    // Change ID type from String to Long, and use JpaRepository.findById
+    // Die parameterlose Methode leitet auf die neue Methode um
+    public List<OrderAssignment> getAllAssignments() {
+        return getAllAssignments("id", "asc", null, null);
+    }
+
+    // --- CRUD-Methoden ---
+
     public OrderAssignment getAssignmentById(Long id) {
         return assignmentRepository.findById(id).orElse(null);
     }
@@ -29,11 +44,9 @@ public class OrderAssignmentService {
     }
 
     public void updateAssignment(OrderAssignment assignment) {
-        // JpaRepository.save() handles both insert and update
         assignmentRepository.save(assignment);
     }
 
-    // Change ID type from String to Long, and use JpaRepository.deleteById
     public void deleteAssignment(Long id) {
         assignmentRepository.deleteById(id);
     }

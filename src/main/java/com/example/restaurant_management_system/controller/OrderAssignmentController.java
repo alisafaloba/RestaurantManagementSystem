@@ -29,19 +29,47 @@ public class OrderAssignmentController {
         this.staffService = staffService;
     }
 
+    // Hilfsmethode, um abhängige Daten zu laden, muss angepasste Service-Methoden aufrufen
+    private void addFormAttributes(Model model) {
+        // Annahme: orderService und staffService haben jetzt Sortier-/Filter-Signaturen,
+        // daher rufen wir die parameterlosen Umleitungen auf, die alle Daten liefern.
+        model.addAttribute("orders", orderService.getAllOrders());
+        // WICHTIG: staffService.getAllStaff() muss ebenfalls die parameterlose Version
+        // haben oder mit null-Filtern aufgerufen werden.
+        model.addAttribute("staffList", staffService.getAllStaff());
+    }
+
+    // GET /orderassignment → list all assignments with filtering and sorting (ANGEPASST)
     @GetMapping
-    public String listAssignments(Model model) {
-        model.addAttribute("assignments", assignmentService.getAllAssignments());
+    public String listAssignments(Model model,
+                                  // Sortier-Parameter
+                                  @RequestParam(defaultValue = "id") String sortField,
+                                  @RequestParam(defaultValue = "asc") String sortDir,
+                                  // Filter-Parameter
+                                  @RequestParam(required = false) Long orderIdFilter,
+                                  @RequestParam(required = false) Long staffIdFilter) {
+
+        // Daten aus dem Service abrufen (gefiltert und sortiert)
+        model.addAttribute("assignments",
+                assignmentService.getAllAssignments(sortField, sortDir, orderIdFilter, staffIdFilter));
+
+        // Sortier-Infos für das UI
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        // Filter-Infos, um die Werte im Filterformular beizubehalten
+        model.addAttribute("orderIdFilter", orderIdFilter);
+        model.addAttribute("staffIdFilter", staffIdFilter);
+
         return "orderassignment/index";
     }
 
+    // GET /orderassignment/new → show create form (ANGEPASST)
     @GetMapping("/new")
     public String showCreateForm(Model model) {
-
         model.addAttribute("assignment", new OrderAssignment());
-        model.addAttribute("orders", orderService.getAllOrders());
-        model.addAttribute("staffList", staffService.getAllStaff());
-
+        addFormAttributes(model); // Nutzt die korrigierte Hilfsmethode
         return "orderassignment/form";
     }
 
@@ -53,13 +81,11 @@ public class OrderAssignmentController {
     ) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("orders", orderService.getAllOrders());
-            model.addAttribute("staffList", staffService.getAllStaff());
+            addFormAttributes(model);
             return "orderassignment/form";
         }
 
         assignmentService.addAssignment(assignment);
-
         return "redirect:/orderassignment";
     }
 
@@ -67,16 +93,13 @@ public class OrderAssignmentController {
     public String showEditForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
 
         OrderAssignment assignment = assignmentService.getAssignmentById(id);
-
         if (assignment == null) {
             redirectAttributes.addFlashAttribute("error", "Order assignment not found");
             return "redirect:/orderassignment";
         }
 
         model.addAttribute("assignment", assignment);
-        model.addAttribute("orders", orderService.getAllOrders());
-        model.addAttribute("staffList", staffService.getAllStaff());
-
+        addFormAttributes(model); // Nutzt die korrigierte Hilfsmethode
         return "orderassignment/form";
     }
 
@@ -89,8 +112,7 @@ public class OrderAssignmentController {
     ) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("orders", orderService.getAllOrders());
-            model.addAttribute("staffList", staffService.getAllStaff());
+            addFormAttributes(model);
             return "orderassignment/form";
         }
 
@@ -102,14 +124,12 @@ public class OrderAssignmentController {
 
     @PostMapping("/{id}/delete")
     public String deleteAssignment(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-
         try {
             assignmentService.deleteAssignment(id);
             redirectAttributes.addFlashAttribute("success", "Order assignment deleted successfully");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to delete order assignment");
         }
-
         return "redirect:/orderassignment";
     }
 }

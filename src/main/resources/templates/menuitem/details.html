@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <title>Menu Item Details</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 70%;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; }
+        h1 { margin-bottom: 20px; }
+        table { border-collapse: collapse; width: 70%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .nav-link { display: inline-block; margin-top: 25px; text-decoration: none; color: #007bff; padding: 8px 15px; border-radius: 4px; font-weight: bold; }
+        .nav-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -36,11 +32,16 @@
     <tr th:each="allergen : ${allergens}">
         <td th:text="${allergen}"></td>
     </tr>
+    <tr th:if="${#lists.isEmpty(allergens)}">
+        <td>None</td>
+    </tr>
     </tbody>
 </table>
 
-<br>
-<a th:href="@{/menuitem}">Back to Menu Item List</a>
+<div style="margin-top: 20px;">
+    <a th:href="@{/}" class="nav-link">Back to Home</a>
+    <a th:href="@{/menuitem}" class="nav-link">Back to Menu Item List</a>
+</div>
 
 </body>
 </html>
