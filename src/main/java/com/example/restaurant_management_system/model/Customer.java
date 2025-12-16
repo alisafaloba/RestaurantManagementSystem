@@ -4,6 +4,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -18,6 +19,10 @@ public class Customer {
 
     @NotBlank(message = "Name is required") // 4. Backend Validation
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    @Pattern(
+            regexp = "^[a-zA-Z .]+$",
+            message = "Name can only contain: letters, spaces and dots!"
+    )
     private String name;
 
     @Email(message = "Must be a valid email format") // 4. Backend Validation
