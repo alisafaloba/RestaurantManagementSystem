@@ -22,6 +22,11 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .error {
+            color: red; /* Stil für Fehlermeldungen */
+            font-size: 0.9em;
+            margin-top: 2px;
+        }
         button {
             background-color: #4CAF50;
             color: white;
@@ -53,11 +58,17 @@
     <div>
         <label for="orderId">Order ID:</label>
         <input type="text" th:field="*{orderId}" id="orderId" required>
+        <span th:if="${#fields.hasErrors('orderId')}"
+              th:errors="*{orderId}"
+              class="error">Order ID Error</span>
     </div>
 
     <div>
         <label for="totalAmount">Total Amount:</label>
         <input type="number" step="0.01" th:field="*{totalAmount}" id="totalAmount" required>
+        <span th:if="${#fields.hasErrors('totalAmount')}"
+              th:errors="*{totalAmount}"
+              class="error">Total Amount Error</span>
     </div>
 
     <button type="submit" th:text="${bill.id} == null ? 'Save' : 'Update'"></button>

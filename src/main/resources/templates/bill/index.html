@@ -4,47 +4,153 @@
     <meta charset="UTF-8">
     <title>Bill List</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
         table {
             border-collapse: collapse;
-            width: 60%;
+            width: 80%;
+            margin-top: 20px;
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 10px;
+            text-align: left;
         }
         th {
             background-color: #f2f2f2;
         }
-        button {
+        th a {
+            text-decoration: none;
+            color: black;
+            display: block;
+        }
+        /* --- Verbessertes Filter-Design --- */
+        .filter-box {
+            border: 1px solid #dcdcdc; /* Hellerer Rand */
+            padding: 20px;
+            margin-bottom: 25px;
+            background-color: #f7f7f7; /* Hintergrund für Kontrast */
+            border-radius: 6px;
+        }
+        .filter-form {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+            flex-wrap: wrap; /* Wichtig für kleinere Bildschirme */
+        }
+        .filter-form div {
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-form label {
+            font-weight: 600; /* Etwas dicker */
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .filter-form input[type="text"],
+        .filter-form input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 150px; /* Einheitliche Breite */
+        }
+        /* Style für Buttons */
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        .btn-primary {
+            background-color: #007bff; /* Blau für Primäraktion (Filtern) */
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d; /* Grau für Sekundäraktion (Zurücksetzen) */
+            color: white;
+        }
+        .btn-danger {
             background-color: #d9534f;
             color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
         }
-        button:hover {
-            background-color: #c9302c;
-        }
-        .edit-btn {
+        .btn-info {
             background-color: #5bc0de;
             margin-right: 5px;
-        }
-        .edit-btn:hover {
-            background-color: #31b0d5;
+            color: white;
         }
     </style>
 </head>
 <body>
 <h1>Bill List</h1>
 
-<a th:href="@{/bill/new}">Add New Bill</a>
+<a th:href="@{/}" class="btn btn-secondary" style="margin-right: 10px;">Back to Home</a>
+<a th:href="@{/bill/new}" class="btn btn-primary" style="margin-bottom: 20px;">+ Add New Bill</a>
+
+<div class="filter-box">
+    <h3>Filter and Search</h3>
+    <form th:action="@{/bill}" method="get" class="filter-form">
+
+        <div>
+            <label for="orderIdFilter">Order ID (contains):</label>
+            <input type="text" id="orderIdFilter" name="orderIdFilter"
+                   th:value="${orderIdFilter}" placeholder="Enter Order ID">
+        </div>
+
+        <div>
+            <label for="minAmount">Min. Total Amount:</label>
+            <input type="number" step="0.01" id="minAmount" name="minAmount"
+                   th:value="${minAmount}" placeholder="Min Amount">
+        </div>
+
+        <div>
+            <label for="maxAmount">Max. Total Amount:</label>
+            <input type="number" step="0.01" id="maxAmount" name="maxAmount"
+                   th:value="${maxAmount}" placeholder="Max Amount">
+        </div>
+
+        <input type="hidden" name="sortField" th:value="${sortField}" />
+        <input type="hidden" name="sortDir" th:value="${sortDir}" />
+
+        <button type="submit" class="btn btn-primary">
+            Apply Filter
+        </button>
+
+        <a th:href="@{/bill}" class="btn btn-secondary">
+            Clear Filter
+        </a>
+    </form>
+</div>
 
 <table>
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Order ID</th>
-        <th>Total Amount</th>
+        <th>
+            <a th:href="@{/bill(sortField='id', sortDir=${sortField == 'id' ? reverseSortDir : 'asc'}, orderIdFilter=${orderIdFilter}, minAmount=${minAmount}, maxAmount=${maxAmount})}">
+                ID
+            </a>
+            <span th:if="${sortField == 'id'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
+        <th>
+            <a th:href="@{/bill(sortField='orderId', sortDir=${sortField == 'orderId' ? reverseSortDir : 'asc'}, orderIdFilter=${orderIdFilter}, minAmount=${minAmount}, maxAmount=${maxAmount})}">
+                Order ID
+            </a>
+            <span th:if="${sortField == 'orderId'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
+        <th>
+            <a th:href="@{/bill(sortField='totalAmount', sortDir=${sortField == 'totalAmount' ? reverseSortDir : 'asc'}, orderIdFilter=${orderIdFilter}, minAmount=${minAmount}, maxAmount=${maxAmount})}">
+                Total Amount
+            </a>
+            <span th:if="${sortField == 'totalAmount'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
         <th>Actions</th>
     </tr>
     </thead>
@@ -55,14 +161,15 @@
         <td th:text="${bill.totalAmount}"></td>
         <td>
             <a th:href="@{'/bill/' + ${bill.id} + '/edit'}">
-                <button type="button" class="edit-btn">Edit</button>
+                <button type="button" class="btn btn-info">Edit</button>
             </a>
             <form th:action="@{'/bill/' + ${bill.id} + '/delete'}" method="post" style="display:inline;">
-                <button type="submit">Delete</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>
