@@ -13,7 +13,7 @@ public class Bill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // DB verwaltet IDs automatisch!
+    private Long id;
 
     @NotBlank(message = "Order ID cannot be empty")
     private String orderId;
