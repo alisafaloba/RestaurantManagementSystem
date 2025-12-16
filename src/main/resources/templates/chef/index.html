@@ -2,30 +2,89 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Chefs</title>
+    <title>Chef List</title>
     <style>
-        table { border-collapse: collapse; width: 70%; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 80%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background-color: #f2f2f2; }
-        button { background-color: #d9534f; color: white; border: none;
-            padding: 5px 10px; cursor: pointer; border-radius: 4px; }
-        button:hover { background-color: #c9302c; }
-        a { text-decoration: none; color: #007bff; margin-right: 8px; }
-        a:hover { text-decoration: underline; }
+        th a { text-decoration: none; color: black; display: block; }
+
+        /* --- Einheitliche Button Styles --- */
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; text-align: center; display: inline-block; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-danger { background-color: #d9534f; color: white; }
+        .btn-info { background-color: #5bc0de; color: white; margin-right: 5px; }
+
+        /* --- Filter-Design --- */
+        .filter-box { border: 1px solid #dcdcdc; padding: 20px; margin-bottom: 25px; background-color: #f7f7f7; border-radius: 6px; }
+        .filter-form { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+        .filter-form div { display: flex; flex-direction: column; }
+        .filter-form label { font-weight: 600; margin-bottom: 5px; color: #333; }
+        .filter-form input[type="text"] { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 150px; }
     </style>
 </head>
 <body>
 
-<h1>Chefs</h1>
+<h1>Chef List</h1>
 
-<a th:href="@{/chef/new}">Add New Chef</a>
+<a th:href="@{/}" class="btn btn-secondary" style="margin-right: 10px;">Back to Home</a>
+<a th:href="@{/chef/new}" class="btn btn-primary" style="margin-bottom: 20px;">+ Add New Chef</a>
+
+<div class="filter-box">
+    <h3>Filter and Search</h3>
+    <form th:action="@{/chef}" method="get" class="filter-form">
+
+        <div>
+            <label for="nameFilter">Name (contains):</label>
+            <input type="text" id="nameFilter" name="nameFilter"
+                   th:value="${nameFilter}" placeholder="Enter Name">
+        </div>
+
+        <div>
+            <label for="specializationFilter">Specialization (contains):</label>
+            <input type="text" id="specializationFilter" name="specializationFilter"
+                   th:value="${specializationFilter}" placeholder="Enter Specialization">
+        </div>
+
+        <input type="hidden" name="sortField" th:value="${sortField}" />
+        <input type="hidden" name="sortDir" th:value="${sortDir}" />
+
+        <button type="submit" class="btn btn-primary">
+            Apply Filter
+        </button>
+
+        <a th:href="@{/chef}" class="btn btn-secondary">
+            Clear Filter
+        </a>
+    </form>
+</div>
 
 <table>
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Specialization</th>
+        <th>
+            <a th:href="@{/chef(sortField='id', sortDir=${sortField == 'id' ? reverseSortDir : 'asc'}, nameFilter=${nameFilter}, specializationFilter=${specializationFilter})}">
+                ID
+            </a>
+            <span th:if="${sortField == 'id'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
+        <th>
+            <a th:href="@{/chef(sortField='name', sortDir=${sortField == 'name' ? reverseSortDir : 'asc'}, nameFilter=${nameFilter}, specializationFilter=${specializationFilter})}">
+                Name
+            </a>
+            <span th:if="${sortField == 'name'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
+        <th>
+            <a th:href="@{/chef(sortField='specialization', sortDir=${sortField == 'specialization' ? reverseSortDir : 'asc'}, nameFilter=${nameFilter}, specializationFilter=${specializationFilter})}">
+                Specialization
+            </a>
+            <span th:if="${sortField == 'specialization'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
         <th>Action</th>
     </tr>
     </thead>
@@ -37,11 +96,13 @@
         <td th:text="${chef.specialization}"></td>
 
         <td>
-            <a th:href="@{'/chef/' + ${chef.id} + '/edit'}">Edit</a>
+            <a th:href="@{'/chef/' + ${chef.id} + '/edit'}">
+                <button type="button" class="btn btn-info">Edit</button>
+            </a>
 
             <form th:action="@{'/chef/' + ${chef.id} + '/delete'}"
                   method="post" style="display:inline;">
-                <button type="submit">Delete</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </td>
     </tr>

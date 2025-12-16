@@ -8,11 +8,15 @@
         form { display: flex; flex-direction: column; gap: 12px; }
         label { font-weight: bold; }
         input { padding: 8px; border: 1px solid #ccc; border-radius: 5px; width: 100%; }
-        button { background-color: #4CAF50; color: white; border: none; padding: 8px 12px;
-            cursor: pointer; border-radius: 5px; }
-        button:hover { background-color: #45a049; }
-        a { margin-top: 12px; display: inline-block; color: #007bff; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        /* Einheitlicher Button-Stil */
+        .btn { background-color: #4CAF50; color: white; border: none; padding: 8px 12px;
+            cursor: pointer; border-radius: 5px; font-weight: bold;}
+        .btn:hover { background-color: #45a049; }
+        /* Stil für Validierungsfehler */
+        .error { color: red; font-size: 0.9em; margin-top: 2px; }
+        /* Stil für Navigationslinks */
+        .nav-links a { margin-top: 12px; display: inline-block; color: #007bff; text-decoration: none; margin-right: 15px;}
+        .nav-links a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -26,18 +30,27 @@
     <div>
         <label for="name">Name:</label>
         <input type="text" th:field="*{name}" id="name" required />
+        <span th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}"
+              class="error">Name Error</span>
     </div>
 
     <div>
         <label for="specialization">Specialization:</label>
         <input type="text" th:field="*{specialization}" id="specialization" />
+        <span th:if="${#fields.hasErrors('specialization')}"
+              th:errors="*{specialization}"
+              class="error">Specialization Error</span>
     </div>
 
-    <button type="submit"
+    <button type="submit" class="btn"
             th:text="${chef.id} == null ? 'Create' : 'Update'"></button>
 </form>
 
-<a th:href="@{/chef}">Back to list</a>
+<div class="nav-links">
+    <a th:href="@{/}">Back to Home</a>
+    <a th:href="@{/chef}">Back to Chef List</a>
+</div>
 
 </body>
 </html>

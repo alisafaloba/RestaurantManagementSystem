@@ -18,12 +18,33 @@ public class ChefController {
         this.chefService = chefService;
     }
 
-    // GET /chef -> list all chefs
+    // GET /chef -> list all chefs, now with filtering and sorting
     @GetMapping
-    public String listChefs(Model model) {
-        model.addAttribute("chefs", chefService.getAllChefs());
+    public String listChefs(Model model,
+                            // Sortier-Parameter
+                            @RequestParam(defaultValue = "id") String sortField,
+                            @RequestParam(defaultValue = "asc") String sortDir,
+                            // Filter-Parameter
+                            @RequestParam(required = false) String nameFilter,
+                            @RequestParam(required = false) String specializationFilter) {
+
+        // Daten aus dem Service abrufen (gefiltert und sortiert)
+        model.addAttribute("chefs",
+                chefService.getAllChefs(sortField, sortDir, nameFilter, specializationFilter));
+
+        // Sortier-Infos für das UI
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        // Filter-Infos, um die Werte im Filterformular beizubehalten
+        model.addAttribute("nameFilter", nameFilter);
+        model.addAttribute("specializationFilter", specializationFilter);
+
         return "chef/index";
     }
+
+    // --- CRUD-Methoden ---
 
     // GET /chef/new -> show create form
     @GetMapping("/new")
@@ -32,28 +53,27 @@ public class ChefController {
         return "chef/form";
     }
 
-    // POST /chef → create new chef (requires @Valid and error handling)
+    // POST /chef → create new chef
     @PostMapping
     public String createChef(@Valid @ModelAttribute Chef chef,
                              BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "chef/form"; // Return to the form to display errors
+            return "chef/form";
         }
 
-        // Manual ID generation is removed (handled by JPA)
         chefService.addChef(chef);
         return "redirect:/chef";
     }
 
-    // POST /chef/{id}/delete → delete chef (ID is now Long, passed as PathVariable)
+    // POST /chef/{id}/delete → delete chef
     @PostMapping("/{id}/delete")
     public String deleteChef(@PathVariable Long id) {
         chefService.deleteChef(id);
         return "redirect:/chef";
     }
 
-    // GET /chef/{id}/edit → show edit form (ID is now Long)
+    // GET /chef/{id}/edit → show edit form
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         Chef chef = chefService.getChefById(id);
@@ -61,17 +81,16 @@ public class ChefController {
         return "chef/form";
     }
 
-
+    // POST /chef/{id}/update
     @PostMapping("/{id}/update")
-    public String updateChef(@PathVariable Long id, // ID is now Long
-                             @Valid @ModelAttribute Chef chef, // Requires @Valid
+    public String updateChef(@PathVariable Long id,
+                             @Valid @ModelAttribute Chef chef,
                              BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "chef/form"; // Return to the form if errors exist
+            return "chef/form";
         }
 
-        // Set the path variable ID back onto the Chef object
         chef.setId(id);
         chefService.updateChef(chef);
         return "redirect:/chef";
