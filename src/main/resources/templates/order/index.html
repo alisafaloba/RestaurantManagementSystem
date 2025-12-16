@@ -5,67 +5,105 @@
     <title>Order List</title>
 
     <style>
-        body { font-family: Arial, sans-serif; max-width: 750px; margin: 30px auto; }
+        /* Einheitliches CSS-Design übernommen und angepasst */
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 95%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        th a { text-decoration: none; color: black; display: block; }
 
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
+        /* --- Einheitliche Button Styles --- */
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-danger { background-color: #d9534f; color: white; }
+        .btn-info { background-color: #5bc0de; color: white; margin-right: 5px; }
+        .btn-detail { background-color: #0275d8; color: white; margin-right: 5px; } /* Neu: Blau für Details */
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .btn {
-            padding: 6px 12px;
-            border-radius: 5px;
-            color: white;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .details-btn { background-color: #0275d8; }
-        .details-btn:hover { background-color: #025aa5; }
-
-        .edit-btn { background-color: #5bc0de; }
-        .edit-btn:hover { background-color: #31b0d5; }
-
-        .delete-btn { background-color: #d9534f; }
-        .delete-btn:hover { background-color: #c9302c; }
-
-        .add-btn {
-            background-color: #5cb85c;
-            padding: 10px 15px;
-            display: inline-block;
-            margin-top: 5px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-        }
+        /* --- Filter-Design --- */
+        .filter-box { border: 1px solid #dcdcdc; padding: 20px; margin-bottom: 25px; background-color: #f7f7f7; border-radius: 6px; }
+        .filter-form { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+        .filter-form div { display: flex; flex-direction: column; }
+        .filter-form label { font-weight: 600; margin-bottom: 5px; color: #333; }
+        .filter-form input[type="datetime-local"], .filter-form select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 180px; }
     </style>
 </head>
-
 <body>
 
-<h1>Orders</h1>
+<h1>Order List</h1>
 
-<a th:href="@{/order/new}" class="add-btn">Add New Order</a>
+<a th:href="@{/}" class="btn btn-secondary" style="margin-right: 10px;">Back to Home</a>
+<a th:href="@{/order/new}" class="btn btn-primary" style="margin-bottom: 20px;">+ Create New Order</a>
+
+<div class="filter-box">
+    <h3>Filter and Search (Combined Criteria)</h3>
+    <form th:action="@{/order}" method="get" class="filter-form">
+
+        <div>
+            <label for="statusFilter">Status:</label>
+            <select id="statusFilter" name="statusFilter">
+                <option value="">-- All Statuses --</option>
+                <option th:each="status : ${allStatuses}"
+                        th:value="${status}"
+                        th:text="${status.name()}"
+                        th:selected="${statusFilter != null and status.equals(statusFilter)}">
+                    Status
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="startDate">Date From:</label>
+            <input type="datetime-local" id="startDate" name="startDate"
+                   th:value="${startDate != null ? #temporals.format(startDate, 'yyyy-MM-dd''T''HH:mm') : ''}">
+        </div>
+
+        <div>
+            <label for="endDate">Date To:</label>
+            <input type="datetime-local" id="endDate" name="endDate"
+                   th:value="${endDate != null ? #temporals.format(endDate, 'yyyy-MM-dd''T''HH:mm') : ''}">
+        </div>
+
+        <input type="hidden" name="sortField" th:value="${sortField}" />
+        <input type="hidden" name="sortDir" th:value="${sortDir}" />
+
+        <button type="submit" class="btn btn-primary">
+            Apply Filter
+        </button>
+
+        <a th:href="@{/order}" class="btn btn-secondary">
+            Clear Filter
+        </a>
+    </form>
+</div>
 
 <table>
     <thead>
     <tr>
-        <th>ID</th>
+        <th>
+            <a th:href="@{/order(sortField='id', sortDir=${sortField == 'id' ? reverseSortDir : 'asc'}, statusFilter=${statusFilter}, startDate=${startDate}, endDate=${endDate})}">
+                ID
+            </a>
+            <span th:if="${sortField == 'id'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
         <th>Customer</th>
         <th>Table</th>
-        <th>Status</th>
-        <th>Date</th>
+
+        <th>
+            <a th:href="@{/order(sortField='status', sortDir=${sortField == 'status' ? reverseSortDir : 'asc'}, statusFilter=${statusFilter}, startDate=${startDate}, endDate=${endDate})}">
+                Status
+            </a>
+            <span th:if="${sortField == 'status'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
+        <th>
+            <a th:href="@{/order(sortField='date', sortDir=${sortField == 'date' ? reverseSortDir : 'asc'}, statusFilter=${statusFilter}, startDate=${startDate}, endDate=${endDate})}">
+                Date
+            </a>
+            <span th:if="${sortField == 'date'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
         <th>Actions</th>
     </tr>
     </thead>
@@ -73,18 +111,19 @@
     <tbody>
     <tr th:each="order : ${orders}">
         <td th:text="${order.id}"></td>
-        <td th:text="${order.customer.name}"></td>
-        <td th:text="${order.table.number}"></td>
+        <td th:text="${order.customer != null ? order.customer.name : 'N/A'}"></td>
+        <td th:text="${order.table != null ? order.table.number : 'N/A'}"></td>
         <td th:text="${order.status}"></td>
         <td th:text="${#temporals.format(order.date, 'yyyy-MM-dd HH:mm')}"></td>
-
         <td>
-            <a th:href="@{'/order/' + ${order.id} + '/details'}" class="btn details-btn">Details</a>
-            <a th:href="@{'/order/' + ${order.id} + '/edit'}" class="btn edit-btn">Edit</a>
-
-            <form th:action="@{'/order/' + ${order.id} + '/delete'}"
-                  method="post" style="display:inline;">
-                <button type="submit" class="btn delete-btn">Delete</button>
+            <a th:href="@{'/order/' + ${order.id} + '/details'}">
+                <button type="button" class="btn btn-detail">Details</button>
+            </a>
+            <a th:href="@{'/order/' + ${order.id} + '/edit'}">
+                <button type="button" class="btn btn-info">Edit</button>
+            </a>
+            <form th:action="@{'/order/' + ${order.id} + '/delete'}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </td>
     </tr>

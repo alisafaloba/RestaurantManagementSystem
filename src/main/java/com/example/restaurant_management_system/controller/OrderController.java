@@ -10,11 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.FieldError;
+import org.springframework.format.annotation.DateTimeFormat; // WICHTIG für LocalDateTime
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Arrays;
-import org.springframework.validation.FieldError; // ADDED Import for manual validation
 
 @Controller
 @RequestMapping("/order")
@@ -34,10 +34,14 @@ public class OrderController {
 
     /**
      * Helper method to load data required by the order/form.html template.
+     * Muss customerService.getAllCustomers() mit den neuen Argumenten aufrufen.
      */
     private void addFormAttributes(Model model) {
         // 1. Pass lists of entities required for the dropdowns
-        model.addAttribute("customers", customerService.getAllCustomers());
+        // Rufe die gefilterte/sortierte Methode mit NULL-Filtern auf, um ALLE Kunden zu erhalten.
+        model.addAttribute("customers", customerService.getAllCustomers("name", "asc", null, null));
+
+        // Annahme: TableService hat noch die alte Signatur ohne Filter/Sortierung.
         model.addAttribute("tables", tableService.getAllTables());
 
         // 2. Pass the list of OrderStatus enum values
@@ -45,12 +49,38 @@ public class OrderController {
     }
 
 
-    // GET /order → show all orders
+    // ERSATZ der ursprünglichen listOrders durch die Filter-/Sortier-Version
     @GetMapping
-    public String listOrders(Model model) {
-        model.addAttribute("orders", orderService.getAllOrders());
+    public String listOrders(Model model,
+                             // Sortier-Parameter
+                             @RequestParam(defaultValue = "id") String sortField,
+                             @RequestParam(defaultValue = "asc") String sortDir,
+                             // Filter-Parameter
+                             @RequestParam(required = false) OrderStatus statusFilter,
+                             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+                             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+
+        // Ruft den Service mit allen Parametern auf
+        model.addAttribute("orders",
+                orderService.getAllOrders(sortField, sortDir, statusFilter, startDate, endDate));
+
+        // Sortier-Infos für das UI
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        // Filter-Infos, um die Werte im Filterformular beizubehalten
+        model.addAttribute("statusFilter", statusFilter);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+
+        // Füge alle OrderStatus-Werte hinzu (für Filter-Dropdown)
+        model.addAttribute("allStatuses", Arrays.asList(OrderStatus.values()));
+
         return "order/index";
     }
+
+    // --- CRUD-Methoden bleiben unverändert, aber addFormAttributes wurde korrigiert ---
 
     // GET /order/new → show form to create a new order
     @GetMapping("/new")
@@ -66,36 +96,31 @@ public class OrderController {
 
     // POST /order → create new order
     @PostMapping
-    public String createOrder(@ModelAttribute Order order, // REMOVED @Valid here
+    public String createOrder(@ModelAttribute Order order,
                               BindingResult bindingResult,
-                              @RequestParam(required = false) Long customerId, // ADDED required=false
-                              @RequestParam(required = false) Long tableId,   // ADDED required=false
+                              @RequestParam(required = false) Long customerId,
+                              @RequestParam(required = false) Long tableId,
                               Model model) {
 
-        // --- Step 1: Handle binding errors for fields that are part of Order object (like date/status) ---
+        // Manuelle Validierung (wie zuvor)
         if (bindingResult.hasErrors()) {
-            // Note: If customer/table were not set via dropdown, they might cause
-            // validation errors later, but here we handle basic field binding errors.
             addFormAttributes(model);
             return "order/form";
         }
 
-        // --- Step 2: Manually check and set the Customer and Table entities ---
-
-        // Check if customerId was provided
+        // Manuell Customer setzen (da @Valid nicht direkt auf ManyToOne funktioniert)
         if (customerId == null || customerId <= 0) {
-            // Manually add an error to BindingResult for the 'customer' property
             bindingResult.addError(new FieldError("order", "customer", order.getCustomer(), false, null, null, "Customer is required"));
         } else {
+            // Korrigierter Aufruf von getAllCustomers (sollte getCustomerById sein, was hier korrekt ist)
             order.setCustomer(customerService.getCustomerById(customerId));
             if (order.getCustomer() == null) {
                 bindingResult.addError(new FieldError("order", "customer", "Invalid customer ID provided."));
             }
         }
 
-        // Check if tableId was provided
+        // Manuell Table setzen
         if (tableId == null || tableId <= 0) {
-            // Manually add an error to BindingResult for the 'table' property
             bindingResult.addError(new FieldError("order", "table", order.getTable(), false, null, null, "Table is required"));
         } else {
             order.setTable(tableService.getTableById(tableId));
@@ -104,25 +129,23 @@ public class OrderController {
             }
         }
 
-        // --- Step 3: Re-check BindingResult for newly added entity errors ---
         if (bindingResult.hasErrors()) {
             addFormAttributes(model);
             return "order/form";
         }
 
-        // --- Step 4: Save the order if everything is valid ---
         orderService.addOrder(order);
         return "redirect:/order";
     }
 
-    // POST /order/{id}/delete → delete order (ID is now Long)
+    // POST /order/{id}/delete → delete order
     @PostMapping("/{id}/delete")
     public String deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
         return "redirect:/order";
     }
 
-    // GET /order/{id}/edit → show edit form (ID is now Long)
+    // GET /order/{id}/edit → show edit form
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model) {
         Order order = orderService.getOrderById(id);
@@ -131,42 +154,24 @@ public class OrderController {
         return "order/form";
     }
 
-    // POST /order/{id}/update (ID is now Long, requires @Valid)
-    // ... (imports and class definition remain the same)
-
-// ... (methods up to showEditForm remain the same)
-
-    // POST /order/{id}/update (ID is now Long, requires @Valid)
-    // ... (imports and class definition remain the same)
-
-// ... (methods up to showEditForm remain the same)
-
-    // POST /order/{id}/update (ID is now Long, requires @Valid)
+    // POST /order/{id}/update
     @PostMapping("/{id}/update")
     public String updateOrder(@PathVariable Long id,
-                              @ModelAttribute Order updatedOrder, // Renamed to clearly separate from DB entity
+                              @ModelAttribute Order updatedOrder,
                               BindingResult bindingResult,
                               @RequestParam(required = false) Long customerId,
                               @RequestParam(required = false) Long tableId,
                               Model model) {
 
-        // 1. Handle binding errors for fields that are part of Order object (like date/status)
         if (bindingResult.hasErrors()) {
             addFormAttributes(model);
             return "order/form";
         }
 
-        // --- Step 2: Retrieve the EXISTING Order entity from the database ---
         Order existingOrder = orderService.getOrderById(id);
+        if (existingOrder == null) { return "redirect:/order"; }
 
-        if (existingOrder == null) {
-            // Should not happen if ID comes from an existing object, but good practice to check
-            return "redirect:/order";
-        }
-
-        // 3. Manually check and set the Customer and Table entities on the updatedOrder object
-        //    (This logic from the previous answer is still needed for validation)
-
+        // Manuelle Validierung (Customer/Table)
         // Check and set Customer
         if (customerId == null || customerId <= 0) {
             bindingResult.addError(new FieldError("updatedOrder", "customer", updatedOrder.getCustomer(), false, null, null, "Customer is required"));
@@ -187,35 +192,23 @@ public class OrderController {
             }
         }
 
-        // 4. Re-check BindingResult for newly added entity errors
         if (bindingResult.hasErrors()) {
             addFormAttributes(model);
-            // Re-add the updatedOrder to the model if validation fails
             model.addAttribute("order", updatedOrder);
             return "order/form";
         }
 
-        // --- Step 5: Copy the updated fields to the existing (managed) entity ---
-
-        // Simple fields
+        // Kopieren der Felder
         existingOrder.setStatus(updatedOrder.getStatus());
         existingOrder.setDate(updatedOrder.getDate());
-
-        // ManyToOne relationships (which were properly set on updatedOrder in step 3)
         existingOrder.setCustomer(updatedOrder.getCustomer());
         existingOrder.setTable(updatedOrder.getTable());
 
-        // NOTE: The assignments and orderLines lists on existingOrder remain untouched.
-
-        // 6. Save the existing (managed) order
-        // The save method will now correctly update the managed entity without touching collections
         orderService.updateOrder(existingOrder);
         return "redirect:/order";
     }
 
-// ... (rest of the controller remains the same)
-
-    // GET /order/{id}/details (ID is now Long)
+    // GET /order/{id}/details (Bleibt unverändert)
     @GetMapping("/{id}/details")
     public String showOrderDetails(@PathVariable Long id, Model model) {
         Order order = orderService.getOrderById(id);

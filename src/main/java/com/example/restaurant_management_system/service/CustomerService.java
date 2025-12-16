@@ -2,6 +2,7 @@ package com.example.restaurant_management_system.service;
 
 import com.example.restaurant_management_system.model.Customer;
 import com.example.restaurant_management_system.repository.CustomerRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +16,22 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    /**
+     * Ruft alle Kunden ab, wendet Sortierung und Filterung an.
+     */
+    public List<Customer> getAllCustomers(String sortField, String sortDir,
+                                          String nameFilter, String emailFilter) {
+
+        // Erstellung des Sortierobjekts
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
+
+        // Aufruf der Repository-Methode für kombiniertes Filtern und Sortieren
+        return customerRepository.findFilteredCustomers(nameFilter, emailFilter, sort);
     }
 
-    // Change ID type from String to Long, and use JpaRepository.findById
+    // --- CRUD-Methoden ---
+
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id).orElse(null);
     }
@@ -29,11 +41,9 @@ public class CustomerService {
     }
 
     public void updateCustomer(Customer customer) {
-        // JpaRepository.save() handles both insert and update
         customerRepository.save(customer);
     }
 
-    // Change ID type from String to Long, and use JpaRepository.deleteById
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);
     }

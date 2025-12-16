@@ -2,18 +2,18 @@ package com.example.restaurant_management_system.controller;
 
 import com.example.restaurant_management_system.model.Order;
 import com.example.restaurant_management_system.model.Table;
-import com.example.restaurant_management_system.repository.CrudRepository;
+import com.example.restaurant_management_system.model.TableStatus; // WICHTIG
 import com.example.restaurant_management_system.repository.OrderRepository;
 import com.example.restaurant_management_system.repository.TableRepository;
 import com.example.restaurant_management_system.service.TableService;
-import jakarta.validation.Valid; // <-- ADD VALIDATION IMPORT
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult; // <-- ADD VALIDATION IMPORT
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
-// Removed java.util.UUID import
 
 @Controller
 @RequestMapping ("/table")
@@ -31,10 +31,34 @@ public class TableController {
     }
 
     @GetMapping
-    public String showTables(Model model) {
-        model.addAttribute("tables", tableService.getAllTables());
+    public String showTables(Model model,
+                             // Sortier-Parameter
+                             @RequestParam(defaultValue = "id") String sortField,
+                             @RequestParam(defaultValue = "asc") String sortDir,
+                             // Filter-Parameter
+                             @RequestParam(required = false) TableStatus statusFilter,
+                             @RequestParam(required = false) String numberFilter) {
+
+        // Daten aus dem Service abrufen (gefiltert und sortiert)
+        model.addAttribute("tables",
+                tableService.getAllTables(sortField, sortDir, statusFilter, numberFilter));
+
+        // Sortier-Infos für das UI
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equalsIgnoreCase("asc") ? "desc" : "asc");
+
+        // Filter-Infos, um die Werte im Filterformular beizubehalten
+        model.addAttribute("statusFilter", statusFilter);
+        model.addAttribute("numberFilter", numberFilter);
+
+        // Alle Statuswerte für das Filter-Dropdown
+        model.addAttribute("allStatuses", Arrays.asList(TableStatus.values()));
+
         return "table/index";
     }
+
+    // ... (restliche CRUD-Methoden bleiben gleich) ...
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
@@ -42,66 +66,43 @@ public class TableController {
         return "table/form";
     }
 
-    // POST /table (Requires @Valid and error handling)
     @PostMapping
     public String processTable(@Valid @ModelAttribute("table") Table table,
                                BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "table/form"; // Return to form to show validation errors
+            return "table/form";
         }
-
-        // Manual ID generation is removed (handled by JPA)
         tableService.addTable(table);
         return "redirect:/table";
     }
 
-    // POST /table/{id}/delete (ID is now Long)
     @PostMapping ("/{id}/delete")
-    public String deleteTable(@PathVariable Long id) { // Changed type to Long
+    public String deleteTable(@PathVariable Long id) {
         tableService.deleteTable(id);
         return "redirect:/table";
     }
 
-    // GET /table/{id}/edit (ID is now Long)
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Long id, Model model) { // Changed type to Long
+    public String showEditForm(@PathVariable Long id, Model model) {
         Table table = tableService.getTableById(id);
         model.addAttribute("table", table);
         return "table/form";
     }
 
-    // POST /table/{id}/update (ID is now Long, requires @Valid)
     @PostMapping("/{id}/update")
-    public String updateTable(@PathVariable Long id, // Changed type to Long
+    public String updateTable(@PathVariable Long id,
                               @Valid @ModelAttribute("table") Table table,
                               BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "table/form"; // Return to form if validation fails
+            return "table/form";
         }
 
         table.setId(id);
         tableService.updateTable(table);
         return "redirect:/table";
     }
-
-
-
-
-
-//    @GetMapping("/{id}/details")
-//    public String showEntityDetails(@PathVariable Long id, Model model) {
-//        Table table = tableService.getTableById(id);
-//
-//        if (table == null) {
-//            return "redirect:/table";
-//        }
-//
-//        model.addAttribute("table", table);
-//        model.addAttribute("orders", table.getOrders());
-//        return "table/details";
-//    }
 
     @GetMapping("/{id}/details")
     public String getTableDetails(@PathVariable Long id, Model model) {

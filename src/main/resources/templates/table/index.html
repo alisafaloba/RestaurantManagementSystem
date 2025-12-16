@@ -4,58 +4,95 @@
     <meta charset="UTF-8">
     <title>Table List</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 70%;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        button {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #c9302c;
-        }
-        a {
-            text-decoration: none;
-            color: #007bff;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .edit-btn {
-            background-color: #5bc0de;
-            margin-right: 5px;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .edit-btn:hover {
-            background-color: #31b0d5;
-        }
+        /* Einheitliches CSS-Design */
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 80%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        th a { text-decoration: none; color: black; display: block; }
+
+        /* --- Einheitliche Button Styles --- */
+        .btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; text-align: center; display: inline-block; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-danger { background-color: #d9534f; color: white; }
+        .btn-info { background-color: #5bc0de; color: white; margin-right: 5px; }
+        .btn-detail { background-color: #6f42c1; color: white; margin-right: 5px; }
+
+        /* --- Filter-Design --- */
+        .filter-box { border: 1px solid #dcdcdc; padding: 20px; margin-bottom: 25px; background-color: #f7f7f7; border-radius: 6px; }
+        .filter-form { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+        .filter-form div { display: flex; flex-direction: column; }
+        .filter-form label { font-weight: 600; margin-bottom: 5px; color: #333; }
+        .filter-form input, .filter-form select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 150px; }
     </style>
 </head>
 <body>
 <h1>Table List</h1>
 
-<a th:href="@{/table/new}">Add New Table</a>
+<a th:href="@{/}" class="btn btn-secondary" style="margin-right: 10px;">Back to Home</a>
+<a th:href="@{/table/new}" class="btn btn-primary" style="margin-bottom: 20px;">+ Add New Table</a>
+
+<div class="filter-box">
+    <h3>Filter and Search</h3>
+    <form th:action="@{/table}" method="get" class="filter-form">
+
+        <div>
+            <label for="numberFilter">Table Number (contains):</label>
+            <input type="text" id="numberFilter" name="numberFilter"
+                   th:value="${numberFilter}" placeholder="Enter number">
+        </div>
+
+        <div>
+            <label for="statusFilter">Status:</label>
+            <select id="statusFilter" name="statusFilter">
+                <option value="">-- All Statuses --</option>
+                <option th:each="status : ${allStatuses}"
+                        th:value="${status}"
+                        th:text="${status}"
+                        th:selected="${statusFilter != null and status.equals(statusFilter)}">
+                    Status
+                </option>
+            </select>
+        </div>
+
+        <input type="hidden" name="sortField" th:value="${sortField}" />
+        <input type="hidden" name="sortDir" th:value="${sortDir}" />
+
+        <button type="submit" class="btn btn-primary">
+            Apply Filter
+        </button>
+
+        <a th:href="@{/table}" class="btn btn-secondary">
+            Clear Filter
+        </a>
+    </form>
+</div>
 
 <table>
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Number</th>
-        <th>Status</th>
+        <th>
+            <a th:href="@{/table(sortField='id', sortDir=${sortField == 'id' ? reverseSortDir : 'asc'}, statusFilter=${statusFilter}, numberFilter=${numberFilter})}">
+                ID
+            </a>
+            <span th:if="${sortField == 'id'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
+        <th>
+            <a th:href="@{/table(sortField='number', sortDir=${sortField == 'number' ? reverseSortDir : 'asc'}, statusFilter=${statusFilter}, numberFilter=${numberFilter})}">
+                Number
+            </a>
+            <span th:if="${sortField == 'number'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
+        <th>
+            <a th:href="@{/table(sortField='occupiedStatus', sortDir=${sortField == 'occupiedStatus' ? reverseSortDir : 'asc'}, statusFilter=${statusFilter}, numberFilter=${numberFilter})}">
+                Status
+            </a>
+            <span th:if="${sortField == 'occupiedStatus'}" th:text="${sortDir == 'asc' ? ' ▲' : ' ▼'}"></span>
+        </th>
+
         <th>Number of Orders</th>
         <th>Action</th>
     </tr>
@@ -67,19 +104,15 @@
         <td th:text="${table.occupiedStatus}"></td>
         <td th:text="${table.orders != null ? table.orders.size() : 0}"></td>
         <td>
-            <!-- Edit button -->
             <a th:href="@{'/table/' + ${table.id} + '/edit'}">
-                <button type="button" class="edit-btn">Edit</button>
+                <button type="button" class="btn btn-info">Edit</button>
             </a>
-            <!-- Delete button -->
             <form th:action="@{'/table/' + ${table.id} + '/delete'}" method="post" style="display:inline;">
-                <button type="submit">Delete</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
-            <!-- Details button -->
             <a th:href="@{'/table/' + ${table.id} + '/details'}">
-                <button type="button" class="edit-btn" style="background-color:#6f42c1;">Details</button>
+                <button type="button" class="btn btn-detail">Details</button>
             </a>
-
         </td>
     </tr>
     </tbody>

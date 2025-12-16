@@ -1,7 +1,9 @@
 package com.example.restaurant_management_system.service;
 
 import com.example.restaurant_management_system.model.Table;
+import com.example.restaurant_management_system.model.TableStatus; // Wichtig
 import com.example.restaurant_management_system.repository.TableRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -14,11 +16,25 @@ public class TableService {
         this.tableRepository = tableRepository;
     }
 
-    public List<Table> getAllTables() {
-        return tableRepository.findAll();
+    /**
+     * Ruft alle Tische ab, wendet Sortierung und Filterung an.
+     */
+    public List<Table> getAllTables(String sortField, String sortDir,
+                                    TableStatus statusFilter, String numberFilter) {
+
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();
+
+        return tableRepository.findFilteredTables(statusFilter, numberFilter, sort);
     }
 
-    // Change ID type from String to Long, and use JpaRepository.findById
+    // Die ursprüngliche getAllTables() wird beibehalten, aber auf die neue Methode umgeleitet
+    public List<Table> getAllTables() {
+        return getAllTables("id", "asc", null, null);
+    }
+
+    // --- CRUD-Methoden ---
+
     public Table getTableById(Long id) {
         return tableRepository.findById(id).orElse(null);
     }
@@ -28,11 +44,9 @@ public class TableService {
     }
 
     public void updateTable(Table table) {
-        // JpaRepository.save() handles both insert and update
         tableRepository.save(table);
     }
 
-    // Change ID type from String to Long, and use JpaRepository.deleteById
     public void deleteTable(Long id) {
         tableRepository.deleteById(id);
     }
