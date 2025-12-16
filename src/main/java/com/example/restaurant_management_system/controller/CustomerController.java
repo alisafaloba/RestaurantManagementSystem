@@ -1,21 +1,31 @@
 package com.example.restaurant_management_system.controller;
 
 import com.example.restaurant_management_system.model.Customer;
+import com.example.restaurant_management_system.model.Order;
+import com.example.restaurant_management_system.repository.CustomerRepository;
 import com.example.restaurant_management_system.service.CustomerService;
-import jakarta.validation.Valid;
+import jakarta.validation.Valid; // <-- ADD VALIDATION IMPORT
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.BindingResult; // <-- ADD VALIDATION IMPORT
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+// Removed java.util.UUID import
+
 
 @Controller
 @RequestMapping ("/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
-    public CustomerController(CustomerService customerService) {
+    private final CustomerRepository customerRepository;
+    public CustomerController(CustomerService customerService, CustomerRepository customerRepository) {
         this.customerService = customerService;
+        this.customerRepository = customerRepository;
     }
+
 
     @GetMapping
     public String listCustomers(Model model,
@@ -42,46 +52,68 @@ public class CustomerController {
         return "Customer/index";
     }
 
+
+
     // --- CRUD-Methoden (Bleiben unverändert, aber hier zur Vollständigkeit) ---
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("customer", new Customer());
-        return "Customer/form";
+        return "customer/form";
     }
 
+    // POST /customer (Requires @Valid and error handling)
     @PostMapping
     public String createCustomer(@Valid @ModelAttribute Customer customer,
                                  BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
-            return "Customer/form";
+            return "customer/form"; // Return to form to show validation errors
         }
+
+        // Manual ID generation is removed (handled by JPA)
         customerService.addCustomer(customer);
         return "redirect:/customer";
     }
 
+    // POST /customer/{id}/delete (ID is now Long)
     @PostMapping("/{id}/delete")
-    public String deleteCustomer(@PathVariable Long id) {
+    public String deleteCustomer(@PathVariable Long id) { // Changed type to Long
         customerService.deleteCustomer(id);
         return "redirect:/customer";
     }
 
+    // GET /customer/{id}/edit (ID is now Long)
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    public String showEditForm(@PathVariable Long id, Model model) { // Changed type to Long
         Customer customer = customerService.getCustomerById(id);
         model.addAttribute("customer", customer);
-        return "Customer/form";
+        return "customer/form"; // Corrected case
     }
 
+    // POST /customer/{id}/update (ID is now Long, requires @Valid)
     @PostMapping("/{id}/update")
-    public String updateCustomer(@PathVariable Long id,
+    public String updateCustomer(@PathVariable Long id, // Changed type to Long
                                  @Valid @ModelAttribute Customer customer,
                                  BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
-            return "Customer/form";
+            return "customer/form"; // Return to form if validation fails
         }
+
         customer.setId(id);
         customerService.updateCustomer(customer);
         return "redirect:/customer";
+    }
+
+    @GetMapping("/{id}/details")
+    public String showCustomerDetails(@PathVariable Long id, Model model) {
+
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new RuntimeException("Customer not found"));
+        model.addAttribute("customer", customer);
+        List<Order> orders = customer.getOrders();
+        model.addAttribute("orders", orders);
+
+        return "customer/details";
     }
 }

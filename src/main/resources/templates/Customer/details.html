@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Details</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .info p {
+            margin: 6px 0;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .empty {
+            text-align: center;
+            font-style: italic;
+            color: #777;
+        }
+
+        .back {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            padding: 8px 14px;
+            background: #0275d8;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .back:hover {
+            background: #025aa5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Customer Details</h1>
+
+    <div class="info">
+        <p><strong>ID:</strong> <span th:text="${customer.id}"></span></p>
+        <p><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${customer.emailaddress}"></span></p>
+    </div>
+
+    <h2>Orders</h2>
+
+    <table th:if="${not #lists.isEmpty(orders)}">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Total Price</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.totalPrice}"></td>
+            <td th:text="${order.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p class="empty" th:if="${#lists.isEmpty(orders)}">
+        This customer has no orders.
+    </p>
+
+    <a class="back" th:href="@{/customer}">← Back to Customers</a>
+
+</div>
+
+</body>
+</html>
