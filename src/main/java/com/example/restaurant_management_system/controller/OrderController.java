@@ -96,7 +96,7 @@ public class OrderController {
 
     // POST /order → create new order
     @PostMapping
-    public String createOrder(@ModelAttribute Order order,
+    public String createOrder(@Valid @ModelAttribute Order order,
                               BindingResult bindingResult,
                               @RequestParam(required = false) Long customerId,
                               @RequestParam(required = false) Long tableId,
